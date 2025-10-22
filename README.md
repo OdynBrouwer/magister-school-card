@@ -114,6 +114,12 @@ Bijdragen zijn welkom via issues en pull requests. Kleine, gerichte wijzigingen 
 
 Zie `LICENSE` voor licentieinformatie.
 
+Wil je bijdragen? Lees eerst de richtlijnen in `CONTRIBUTING.md`.
+
+## Voorbeeld sensordata
+
+In de map `examples/` vind je `sensors_example.yaml` — een template met mock-attributen die laat zien welke attributen de kaart verwacht. Gebruik dit als startpunt om een template sensor in Home Assistant te maken voor testen.
+
 ---
 
 Wil je dat ik nog een `CONTRIBUTING.md` toevoeg, badges voor CI (GitHub Actions) toevoeg of voorbeeld sensordata opneem, dan maak ik dat voor je in het Nederlands.

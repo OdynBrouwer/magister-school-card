@@ -1,0 +1,46 @@
+# Voorbeeld: template sensor attributen voor testing
+# Gebruik deze voorbeelden als basis om een template sensor in Home Assistant te maken.
+
+sensor:
+  - platform: template
+    sensors:
+      magister_mock:
+        friendly_name: "Magister Mock"
+        value_template: "OK"
+        attribute_templates:
+          naam: "Jan Jansen"
+          stamnummer: "123456"
+          geboortedatum: "2008-04-12"
+          aantal_afspraken_vandaag: 3
+          aantal_huiswerk: 2
+          cijfers:
+            - vak: "wiskunde"
+              waarde: 7.5
+              omschrijving: "H1 toets"
+              ingevoerd_op: "2025-10-20T08:00:00"
+            - vak: "nederlands"
+              waarde: 8.0
+              omschrijving: "Schrijfopdracht"
+              ingevoerd_op: "2025-10-18T10:00:00"
+          opdrachten:
+            - titel: "Schema project"
+              vak: "geschiedenis"
+              inleveren_voor: "2025-10-25T23:59:00"
+            - titel: "Rekenen oefenen"
+              vak: "wiskunde"
+              inleveren_voor: "2025-10-24T12:00:00"
+          afspraken:
+            - start: "2025-10-22T09:00:00"
+              einde: "2025-10-22T10:00:00"
+              omschrijving: "Wiskunde"
+              lokaal: "A12"
+            - start: "2025-10-22T10:15:00"
+              einde: "2025-10-22T11:00:00"
+              omschrijving: "Nederlands"
+              lokaal: "B01"
+          volgende_afspraak: "09:00"
+          volgende_vak: "WISKUNDE"
+          absenties: []
+          wijzigingen: []
+          aanmeldingen: []
+          activiteiten: []
