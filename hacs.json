@@ -1,0 +1,8 @@
+{
+  "name": "Magister School Card",
+  "content_in_root": true,
+  "render_readme": true,
+  "homeassistant": "2023.8.0",
+  "country": "NL",
+  "zip_release": true
+}
