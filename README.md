@@ -5,8 +5,6 @@
 
 Een mooie en responsive Lovelace-card voor de **[Magister School Integration](https://github.com/OdynBrouwer/magister-school-integration)**. Toon rooster, cijfers, huiswerk, wijzigingen en meer in één overzichtelijke kaart.
 
-![Voorbeeld](https://github.com/OdynBrouwer/magister-school-card/raw/main/screenshot.png) *(optioneel: voeg screenshot toe)*
-
 ## 📦 Installatie via HACS (aanbevolen)
 
 1. Open Home Assistant en ga naar **HACS → Frontend → ⋯ (Custom repositories)**
