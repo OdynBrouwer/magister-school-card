@@ -32,22 +32,23 @@ type: module
 
 ## Gebruik — voorbeeld configuratie
 
-Een basisvoorbeeld voor Lovelace:
+Een basisvoorbeeld voor Lovelace (aanbevolen: gebruik de sensor die de custom integration levert):
 
 ```yaml
 type: custom:magister-school-card
-entity: sensor.magister_jouw_kind
+entity: sensor.magister_overview  # of de sensor die jouw magister-integration aanmaakt
 layout: grid-3 # opties: grid-1, grid-2, grid-3, grid-auto
 show_widgets:
-  - rooster_vandaag
-  - wijzigingen
-  - volgende_les
-  - cijfers
-  - opdrachten
+   - rooster_vandaag
+   - wijzigingen
+   - volgende_les
+   - cijfers
+   - opdrachten
 ```
 
 Belangrijk:
-- `entity` moet verwijzen naar de Magister sensor in jouw Home Assistant (bijv. `sensor.magister_overview` of `sensor.magister_jouw_kind`).
+- De kaart verwacht data afkomstig van de custom integration: https://github.com/OdynBrouwer/magister-school-integration
+- `entity` moet verwijzen naar de Magister sensor die de integration in Home Assistant aanmaakt (bijv. `sensor.magister_overview`).
 - `layout` bepaalt de beginindeling; gebruikers kunnen dit ook in de kaart zelf wisselen.
 - `show_widgets` is een lijst met widgets die je wil laten zien.
 
@@ -116,5 +117,6 @@ Wil je bijdragen? Lees eerst de richtlijnen in `CONTRIBUTING.md`.
 
 ## Voorbeeld sensordata
 
-In de map `examples/` vind je `sensors_example.yaml` — een template met mock-attributen die laat zien welke attributen de kaart verwacht. Gebruik dit als startpunt om een template sensor in Home Assistant te maken voor testen.
+In de map `examples/` vind je `sensors_example.yaml` — dit is een mock/template die laat zien welke attributen de kaart verwacht. Gebruik dit alleen om lokaal te testen of wanneer je (tijdelijk) niet met de custom integration werkt.
 
+---
