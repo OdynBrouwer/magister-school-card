@@ -39,7 +39,7 @@ type: custom:magister-school-card
 entity: sensor.magister_overview  # of de sensor die jouw magister-integration aanmaakt
 layout: grid-3 # opties: grid-1, grid-2, grid-3, grid-auto
 show_widgets:
-   - rooster_vandaag
+   - rooster_meta
    - wijzigingen
    - volgende_les
    - cijfers
@@ -57,6 +57,8 @@ Belangrijk:
 - `stats`
 - `volgende_les`
 - `rooster_vandaag`
+- `rooster_morgen`
+- `rooster_meta`
 - `cijfers`
 - `opdrachten`
 - `absenties`
