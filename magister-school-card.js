@@ -311,7 +311,7 @@ class MagisterSchoolCard extends LitElement {
   setConfig(config) {
     this.config = {
       layout: 'auto',
-      show_widgets: ['stats', 'volgende_les', 'rooster_vandaag', 'roostyer_morgen', 'cijfers', 'opdrachten', 'absenties', 'wijzigingen'],
+      show_widgets: ['stats', 'volgende_les', 'rooster_vandaag', 'rooster_morgen', 'rooster_meta', 'cijfers', 'opdrachten', 'absenties', 'wijzigingen'],
       ...config
     };
   }
@@ -416,6 +416,10 @@ class MagisterSchoolCard extends LitElement {
       widgets.push(this._renderRoosterWidget());
     }
 
+    if (showWidgets.includes('rooster_meta')) {
+      widgets.push(this._renderRoosterMetaWidget());
+    }
+
     if (showWidgets.includes('rooster_morgen')) {
       widgets.push(this._renderRoosterMorgenWidget());
     }
@@ -445,6 +449,12 @@ class MagisterSchoolCard extends LitElement {
     }
 
     return widgets;
+  }
+
+  _renderRoosterMetaWidget() {
+    const hour = new Date().getHours();
+    // tot 18:00 vandaag tonen, daarna morgen
+    return hour < 18 ? this._renderRoosterWidget() : this._renderRoosterMorgenWidget();
   }
 
   _renderRoosterWidget() {
