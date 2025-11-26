@@ -351,7 +351,8 @@ class MagisterSchoolCard extends LitElement {
   }
 
   render() {
-    if (!this._data) {
+    const entityState = this.hass?.states?.[this.config.entity]?.state;
+    if (!this._data || entityState === 'unavailable' || entityState === 'unknown') {
       return html`
         <div class="card">
           <div class="empty-state">📚 School data laden...</div>
