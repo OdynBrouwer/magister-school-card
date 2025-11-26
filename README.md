@@ -184,7 +184,7 @@ De component is gebouwd met [Lit](https://lit.dev/) als ES-module.
 ### Lokaal ontwikkelen
 
 1. Clone de repository
-2. Bewerk `dist/magister-school-card.js`
+2. Bewerk `magister-school-card.js`
 3. Kopieer naar je Home Assistant `www` folder
 4. Voeg als lokale resource toe:
 

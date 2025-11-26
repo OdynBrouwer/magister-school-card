@@ -311,7 +311,7 @@ class MagisterSchoolCard extends LitElement {
   setConfig(config) {
     this.config = {
       layout: 'auto',
-      show_widgets: ['stats', 'volgende_les', 'rooster_vandaag', 'cijfers', 'opdrachten', 'absenties', 'wijzigingen'],
+      show_widgets: ['stats', 'volgende_les', 'rooster_vandaag', 'rooster_morgen', 'rooster_meta', 'cijfers', 'opdrachten', 'absenties', 'wijzigingen'],
       ...config
     };
   }
@@ -351,8 +351,7 @@ class MagisterSchoolCard extends LitElement {
   }
 
   render() {
-    const entityState = this.hass?.states?.[this.config.entity]?.state;
-    if (!this._data || entityState === 'unavailable' || entityState === 'unknown') {
+    if (!this._data) {
       return html`
         <div class="card">
           <div class="empty-state">📚 School data laden...</div>
@@ -416,6 +415,14 @@ class MagisterSchoolCard extends LitElement {
     if (showWidgets.includes('rooster_vandaag')) {
       widgets.push(this._renderRoosterWidget());
     }
+
+    if (showWidgets.includes('rooster_meta')) {
+      widgets.push(this._renderRoosterMetaWidget());
+    }
+
+    if (showWidgets.includes('rooster_morgen')) {
+      widgets.push(this._renderRoosterMorgenWidget());
+    }
     
     if (showWidgets.includes('cijfers')) {
       widgets.push(this._renderCijfersWidget());
@@ -468,6 +475,44 @@ class MagisterSchoolCard extends LitElement {
               </div>
             `) : 
             html`<div class="empty-state">Geen lessen vandaag 🎉</div>`
+          }
+        </div>
+      </div>
+    `;
+  }
+
+  _renderRoosterMetaWidget() {
+    const hour = new Date().getHours();
+    // tot 18:00 vandaag tonen, daarna morgen
+    return hour < 18 ? this._renderRoosterWidget() : this._renderRoosterMorgenWidget();
+  }
+
+  _renderRoosterMorgenWidget() {
+    const afspraken = this._data.afspraken || [];
+    const morgenDate = new Date();
+    morgenDate.setDate(morgenDate.getDate() + 1);
+    const morgen = morgenDate.toISOString().split('T')[0];
+    const afsprakenMorgen = afspraken.filter(afspraak =>
+      afspraak.start?.startsWith(morgen)
+    );
+
+    return html`
+      <div class="widget">
+        <div class="widget-header">
+          <h3 class="widget-title">📅 Rooster Morgen</h3>
+          <span class="widget-icon">${afsprakenMorgen.length}</span>
+        </div>
+        <div class="widget-content">
+          ${afsprakenMorgen.length > 0 ?
+            afsprakenMorgen.map(afspraak => html`
+              <div class="afspraak-item">
+                <div><strong>${afspraak.start?.substr(11, 5)}-${afspraak.einde?.substr(11, 5)}</strong></div>
+                <div>${afspraak.omschrijving}</div>
+                ${afspraak.lokaal ? html`<div class="tijd">📍 ${afspraak.lokaal}</div>` : ''}
+                ${afspraak.is_huiswerk ? html`<span class="badge">HW</span>` : ''}
+              </div>
+            `) :
+            html`<div class="empty-state">Geen lessen morgen 🎉</div>`
           }
         </div>
       </div>

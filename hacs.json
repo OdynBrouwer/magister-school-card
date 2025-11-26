@@ -1,6 +1,7 @@
 {
   "name": "Magister School Card",
-  "content_in_root": false,
+  "content_in_root": true,
+  "filename": "magister-school-card.js",
   "homeassistant": "2024.0.0",
   "render_readme": true
 }
