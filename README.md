@@ -54,14 +54,28 @@ Zie de configuratie-voorbeelden hieronder.
 
 Voeg de card toe aan je Lovelace dashboard:
 
+**Optie 1: Slimme rooster widget (aanbevolen)**
 ```yaml
 type: custom:magister-school-card
 entity: sensor.magister_voornaam_achternaam  # Vervang met jouw Magister sensor
 layout: grid-3
 show_widgets:
-  - rooster_meta
+  - rooster_meta      # Automatisch vandaag/morgen
   - wijzigingen
   - volgende_les
+  - cijfers
+  - opdrachten
+```
+
+**Optie 2: Beide roosters tonen**
+```yaml
+type: custom:magister-school-card
+entity: sensor.magister_voornaam_achternaam
+layout: grid-3
+show_widgets:
+  - rooster_vandaag   # Altijd vandaag
+  - rooster_morgen    # Altijd morgen
+  - wijzigingen
   - cijfers
   - opdrachten
 ```
@@ -76,11 +90,18 @@ show_widgets:
 
 ### 📋 Beschikbare widgets
 
+#### 📅 Rooster widgets
+- `rooster_vandaag` — **Altijd** rooster van vandaag
+- `rooster_morgen` — **Altijd** rooster van morgen  
+- `rooster_meta` — **Slimme** widget die automatisch schakelt:
+  - Vóór 18:00 → toont vandaag
+  - Na 18:00 → toont morgen
+  
+  💡 **Tip:** Gebruik `rooster_vandaag` + `rooster_morgen` voor beide, of alleen `rooster_meta` voor automatisch schakelen.
+
+#### 🎓 Overige widgets
 - `stats` — Statistieken overzicht
 - `volgende_les` — Eerstvolgende les
-- `rooster_vandaag` — Rooster van vandaag
-- `rooster_morgen` — Rooster van morgen
-- `rooster_meta` — Toon rooster vandaag of morgen (afhankelijk van tijd)
 - `cijfers` — Recente cijfers
 - `opdrachten` — Huiswerk en opdrachten
 - `absenties` — Afwezigheid
