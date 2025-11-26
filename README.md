@@ -5,6 +5,8 @@
 
 Een mooie en responsive Lovelace-card voor de **[Magister School Integration](https://github.com/OdynBrouwer/magister-school-integration)**. Toon rooster, cijfers, huiswerk, wijzigingen en meer in één overzichtelijke kaart.
 
+![Voorbeeld](https://github.com/OdynBrouwer/magister-school-card/raw/main/screenshot.png) *(optioneel: voeg screenshot toe)*
+
 ## 📦 Installatie via HACS (aanbevolen)
 
 ### Stap 1: Voeg custom repository toe
@@ -77,6 +79,8 @@ show_widgets:
 - `stats` — Statistieken overzicht
 - `volgende_les` — Eerstvolgende les
 - `rooster_vandaag` — Rooster van vandaag
+- `rooster_morgen` — Rooster van morgen
+- `rooster_meta` — Toon rooster vandaag of morgen (afhankelijk van tijd)
 - `cijfers` — Recente cijfers
 - `opdrachten` — Huiswerk en opdrachten
 - `absenties` — Afwezigheid
