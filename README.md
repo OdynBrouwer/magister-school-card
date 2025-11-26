@@ -59,7 +59,7 @@ type: custom:magister-school-card
 entity: sensor.magister_voornaam_achternaam  # Vervang met jouw Magister sensor
 layout: grid-3
 show_widgets:
-  - rooster_vandaag
+  - rooster_meta
   - wijzigingen
   - volgende_les
   - cijfers
@@ -97,7 +97,9 @@ layout: grid-auto
 show_widgets:
   - stats
   - volgende_les
+  - rooster_meta
   - rooster_vandaag
+  - rooster_morgen
   - cijfers
   - opdrachten
   - wijzigingen
