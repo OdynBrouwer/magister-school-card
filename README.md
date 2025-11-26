@@ -9,15 +9,6 @@ Een mooie en responsive Lovelace-card voor de **[Magister School Integration](ht
 
 ## 📦 Installatie via HACS (aanbevolen)
 
-<<<<<<< HEAD
-1. Open Home Assistant en ga naar **HACS → Frontend → ⋯ (Custom repositories)**
-2. Voeg het repository toe met:
-   - **URL**: `https://github.com/OdynBrouwer/magister-school-card`
-   - **Categorie**: `Dashboard`
-3. Klik op de repo en na open druk op "download"
-4. Herstart Home Assistant of "CTRL + F5"
-5. Voeg de card toe aan je dashboard (voorbeeld hieronder)
-=======
 ### Stap 1: Voeg custom repository toe
 
 1. Open Home Assistant en ga naar **HACS → Frontend**
@@ -39,7 +30,6 @@ Een mooie en responsive Lovelace-card voor de **[Magister School Integration](ht
 ### Stap 3: Voeg de card toe aan je dashboard
 
 Zie de configuratie-voorbeelden hieronder.
->>>>>>> eca3dbd (Verbeter README met duidelijkere HACS installatie instructies en betere documentatie structuur)
 
 ## 📥 Handmatige installatie
 
@@ -66,13 +56,8 @@ Voeg de card toe aan je Lovelace dashboard:
 
 ```yaml
 type: custom:magister-school-card
-<<<<<<< HEAD
-entity: sensor.magister_voornaam_achternaam  # of de sensor die jouw magister-integration aanmaakt
-layout: grid-3 # opties: grid-1, grid-2, grid-3, grid-auto
-=======
 entity: sensor.magister_voornaam_achternaam  # Vervang met jouw Magister sensor
 layout: grid-3
->>>>>>> eca3dbd (Verbeter README met duidelijkere HACS installatie instructies en betere documentatie structuur)
 show_widgets:
   - rooster_vandaag
   - wijzigingen
@@ -216,50 +201,23 @@ Het element is geregistreerd als `custom:magister-school-card`
 
 Gebruik `examples/sensors_example.yaml` om een mock sensor te maken voor lokaal testen.
 
-## 🐛 Support & Bugs
+## Support
 
-Hulp nodig of een bug gevonden? Open een [issue](https://github.com/OdynBrouwer/magister-school-card/issues) met:
+Open een issue in dit repository met:
+- Je Home Assistant versie
+- De gebruikte `entity`
+- Een korte omschrijving of screenshot van het probleem
 
-- ✅ Je **Home Assistant versie**
-- ✅ De gebruikte **entity** naam
-- ✅ **Screenshot** van het probleem
-- ✅ **Browser console errors** (F12 → Console tab)
-- ✅ Korte beschrijving van wat er mis gaat
+## Onderhoud & bijdragen
 
-## 🤝 Bijdragen
+Maintainer: Repository eigenaar
 
-Bijdragen zijn van harte welkom! 
+Bijdragen zijn welkom via issues en pull requests. Kleine, gerichte wijzigingen gaan het snelst door. Voor grotere features open eerst een issue om de aanpak te bespreken.
 
-### Hoe bij te dragen?
+Zie `LICENSE` voor licentieinformatie.
 
-1. **Fork** dit repository
-2. Maak een **feature branch** (`git checkout -b feature/mijn-verbetering`)
-3. **Commit** je wijzigingen (`git commit -m 'Voeg feature toe'`)
-4. **Push** naar de branch (`git push origin feature/mijn-verbetering`)
-5. Open een **Pull Request**
+Wil je bijdragen? Lees eerst de richtlijnen in `CONTRIBUTING.md`.
 
-### Richtlijnen
+## Voorbeeld sensordata
 
-- Kleine, gerichte wijzigingen gaan sneller door
-- Voor grote features: open eerst een issue om te overleggen
-- Test je wijzigingen lokaal in Home Assistant
-- Volg de bestaande code stijl
-
-Lees `CONTRIBUTING.md` voor meer details.
-
-## 📄 Licentie
-
-Dit project valt onder de voorwaarden van de licentie zoals beschreven in `LICENSE`.
-
-## 📚 Voorbeeld sensordata
-
-In de map `examples/` vind je `sensors_example.yaml` — een mock template die toont welke attributen de kaart verwacht. 
-
-Gebruik dit voor:
-- **Lokaal testen** zonder volledige Magister integration
-- **Ontwikkeling** van nieuwe features
-- **Debugging** van data structuur problemen
-
----
-
-**Gemaakt met ❤️ voor de Nederlandse Home Assistant community**
+In de map `examples/` vind je `sensors_example.yaml` — dit is een mock/template die laat zien welke attributen de kaart verwacht. Gebruik dit alleen om lokaal te testen of wanneer je (tijdelijk) niet met de custom integration werkt.
