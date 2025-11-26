@@ -483,8 +483,42 @@ class MagisterSchoolCard extends LitElement {
 
   _renderRoosterMetaWidget() {
     const hour = new Date().getHours();
-    // tot 18:00 vandaag tonen, daarna morgen
-    return hour < 18 ? this._renderRoosterWidget() : this._renderRoosterMorgenWidget();
+    const afspraken = this._data.afspraken || [];
+    
+    // Bepaal welke dag we tonen
+    const isVandaag = hour < 18;
+    const targetDate = new Date();
+    if (!isVandaag) {
+      targetDate.setDate(targetDate.getDate() + 1);
+    }
+    const dateStr = targetDate.toISOString().split('T')[0];
+    const afsprakenFiltered = afspraken.filter(afspraak => 
+      afspraak.start?.startsWith(dateStr)
+    );
+
+    const titel = isVandaag ? '📅 Rooster (Vandaag)' : '📅 Rooster (Morgen)';
+
+    return html`
+      <div class="widget">
+        <div class="widget-header">
+          <h3 class="widget-title">${titel}</h3>
+          <span class="widget-icon">${afsprakenFiltered.length}</span>
+        </div>
+        <div class="widget-content">
+          ${afsprakenFiltered.length > 0 ?
+            afsprakenFiltered.map(afspraak => html`
+              <div class="afspraak-item">
+                <div><strong>${afspraak.start?.substr(11, 5)}-${afspraak.einde?.substr(11, 5)}</strong></div>
+                <div>${afspraak.omschrijving}</div>
+                ${afspraak.lokaal ? html`<div class="tijd">📍 ${afspraak.lokaal}</div>` : ''}
+                ${afspraak.is_huiswerk ? html`<span class="badge">HW</span>` : ''}
+              </div>
+            `) :
+            html`<div class="empty-state">Geen lessen ${isVandaag ? 'vandaag' : 'morgen'} 🎉</div>`
+          }
+        </div>
+      </div>
+    `;
   }
 
   _renderRoosterMorgenWidget() {
