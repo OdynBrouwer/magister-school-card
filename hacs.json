@@ -1,9 +1,4 @@
 {
   "name": "Magister School Card",
-  "content_in_root": true,
-  "render_readme": true,
-  "filename": "magister-school-card.js",
-  "homeassistant": "2023.8.0",
-  "country": "NL",
-  "short_description": "Responsive Lovelace card voor Magister schoolgegevens"
+  "render_readme": true
 }
