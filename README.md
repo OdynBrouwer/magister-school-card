@@ -38,7 +38,7 @@ Een basisvoorbeeld voor Lovelace (aanbevolen: gebruik de sensor die de custom in
 
 ```yaml
 type: custom:magister-school-card
-entity: sensor.magister_  # of de sensor die jouw magister-integration aanmaakt
+entity: sensor.magister_voornaam_achternaam  # of de sensor die jouw magister-integration aanmaakt
 layout: grid-3 # opties: grid-1, grid-2, grid-3, grid-auto
 show_widgets:
    - rooster_vandaag
