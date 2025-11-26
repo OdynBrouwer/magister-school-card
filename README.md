@@ -12,9 +12,9 @@ Een mooie en responsive Lovelace-card voor de **[Magister School Integration](ht
 1. Open Home Assistant en ga naar **HACS → Frontend → ⋯ (Custom repositories)**
 2. Voeg het repository toe met:
    - **URL**: `https://github.com/OdynBrouwer/magister-school-card`
-   - **Categorie**: `Lovelace`
-3. Installeer de kaart vanuit HACS
-4. Herstart Home Assistant
+   - **Categorie**: `Dashboard`
+3. Klik op de repo en na open druk op "download"
+4. Herstart Home Assistant of "CTRL + F5"
 5. Voeg de card toe aan je dashboard (voorbeeld hieronder)
 
 ## 📥 Handmatige installatie
@@ -38,7 +38,7 @@ Een basisvoorbeeld voor Lovelace (aanbevolen: gebruik de sensor die de custom in
 
 ```yaml
 type: custom:magister-school-card
-entity: sensor.magister_overview  # of de sensor die jouw magister-integration aanmaakt
+entity: sensor.magister_  # of de sensor die jouw magister-integration aanmaakt
 layout: grid-3 # opties: grid-1, grid-2, grid-3, grid-auto
 show_widgets:
    - rooster_vandaag
