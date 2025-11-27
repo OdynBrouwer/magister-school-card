@@ -83,8 +83,9 @@ show_widgets:
 | Optie | Type | Beschrijving | Standaard |
 |-------|------|--------------|-----------|
 | `entity` | string | **Vereist**. De Magister sensor entity (bijv. `sensor.magister_voornaam_achternaam`) | - |
-| `layout` | string | Grid layout: `grid-1`, `grid-2`, `grid-3`, `grid-auto` | `grid-3` |
-| `show_widgets` | lijst | Welke widgets tonen (zie beschikbare widgets hieronder) | alle widgets |
+| `layout` | string | Grid layout: `grid-1`, `grid-2`, `grid-3`, `grid-auto` (alleen als `widget_columns` niet gebruikt wordt) | `grid-auto` |
+| `show_widgets` | lijst | Welke widgets tonen (alleen als `widget_columns` niet gebruikt wordt) | alle widgets |
+| `widget_columns` | object | **Nieuw!** Verdeel widgets over kolommen. Bijvoorbeeld: `{ column1: ['stats', 'rooster_meta'], column2: ['cijfers'] }` | `null` |
 
 ### 📋 Beschikbare widgets
 
@@ -108,6 +109,66 @@ show_widgets:
 - `activiteiten` — Schoolactiviteiten
 
 ### ⚙️ Geavanceerde configuratie
+
+#### Kolom-indeling: Zelf kiezen welke widgets in welke kolom
+
+Met de `widget_columns` optie kun je **precies bepalen** welke widgets in welke kolom verschijnen. Dit geeft je volledige controle over de layout!
+
+**Voorbeeld: 2 kolommen**
+```yaml
+type: custom:magister-school-card
+entity: sensor.magister_voornaam_achternaam
+widget_columns:
+  column1:
+    - rooster_meta
+    - volgende_les
+    - stats
+  column2:
+    - cijfers
+    - opdrachten
+    - wijzigingen
+```
+
+**Voorbeeld: 3 kolommen met specifieke indeling**
+```yaml
+type: custom:magister-school-card
+entity: sensor.magister_voornaam_achternaam
+widget_columns:
+  column1:
+    - rooster_vandaag
+    - volgende_les
+  column2:
+    - rooster_morgen
+    - cijfers
+  column3:
+    - opdrachten
+    - wijzigingen
+    - absenties
+```
+
+**Voorbeeld: 1 kolom (alles onder elkaar)**
+```yaml
+type: custom:magister-school-card
+entity: sensor.magister_voornaam_achternaam
+widget_columns:
+  column1:
+    - stats
+    - rooster_meta
+    - cijfers
+    - opdrachten
+    - wijzigingen
+```
+
+💡 **Tips voor kolom-indeling:**
+- Gebruik zoveel kolommen als je wilt (`column1`, `column2`, `column3`, etc.)
+- Widgets worden in de volgorde getoond die je opgeeft
+- Op mobiel worden kolommen automatisch onder elkaar geplaatst
+- Op tablets (< 1200px) worden kolommen in 2 kolommen getoond
+- Vergeet niet elke widget naam exact te schrijven (zie lijst hierboven)
+
+#### Automatische grid layout (standaard gedrag)
+
+Als je **geen** `widget_columns` opgeeft, gebruikt de card automatisch een grid layout met knoppen om te wisselen:
 
 ```yaml
 type: custom:magister-school-card

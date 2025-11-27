@@ -117,6 +117,44 @@ class MagisterSchoolCard extends LitElement {
       gap: 20px; 
       width: 100%;
     }
+
+    /* Custom Column Layout */
+    .column-container {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+      min-width: 0; /* Prevent flex items from overflowing */
+    }
+
+    /* Responsive aanpassingen voor kolommen */
+    @media (max-width: 1200px) {
+      .column-container {
+        flex-wrap: wrap;
+      }
+      
+      .column {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 300px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .column-container {
+        flex-direction: column;
+      }
+      
+      .column {
+        flex: 1 1 100%;
+        min-width: 100%;
+      }
+    }
     
     /* Responsive breakpoints */
     @media (max-width: 1200px) {
@@ -312,6 +350,8 @@ class MagisterSchoolCard extends LitElement {
     this.config = {
       layout: 'auto',
       show_widgets: ['stats', 'volgende_les', 'rooster_vandaag', 'rooster_morgen', 'rooster_meta', 'cijfers', 'opdrachten', 'absenties', 'wijzigingen'],
+      // Nieuwe optie: verdeel widgets over kolommen
+      widget_columns: null, // Bijvoorbeeld: { column1: ['stats', 'rooster_vandaag'], column2: ['cijfers', 'opdrachten'], column3: ['volgende_les'] }
       ...config
     };
   }
@@ -359,27 +399,34 @@ class MagisterSchoolCard extends LitElement {
       `;
     }
 
+    // Controleer of we een kolom-gebaseerde layout gebruiken
+    const useColumnLayout = this.config.widget_columns && Object.keys(this.config.widget_columns).length > 0;
+
     return html`
       <div class="card">
         <div class="header">
           <h1>🏫 School Dashboard</h1>
-          <div class="layout-selector">
-            <button class="layout-btn ${this._layout === 'grid-1' ? 'active' : ''}" 
-                    @click=${() => this._setLayout('grid-1')}>1 Kolom</button>
-            <button class="layout-btn ${this._layout === 'grid-2' ? 'active' : ''}" 
-                    @click=${() => this._setLayout('grid-2')}>2 Kolommen</button>
-            <button class="layout-btn ${this._layout === 'grid-3' ? 'active' : ''}" 
-                    @click=${() => this._setLayout('grid-3')}>3 Kolommen</button>
-            <button class="layout-btn ${this._layout === 'grid-auto' ? 'active' : ''}" 
-                    @click=${() => this._setLayout('grid-auto')}>Auto Fit</button>
-          </div>
+          ${!useColumnLayout ? html`
+            <div class="layout-selector">
+              <button class="layout-btn ${this._layout === 'grid-1' ? 'active' : ''}" 
+                      @click=${() => this._setLayout('grid-1')}>1 Kolom</button>
+              <button class="layout-btn ${this._layout === 'grid-2' ? 'active' : ''}" 
+                      @click=${() => this._setLayout('grid-2')}>2 Kolommen</button>
+              <button class="layout-btn ${this._layout === 'grid-3' ? 'active' : ''}" 
+                      @click=${() => this._setLayout('grid-3')}>3 Kolommen</button>
+              <button class="layout-btn ${this._layout === 'grid-auto' ? 'active' : ''}" 
+                      @click=${() => this._setLayout('grid-auto')}>Auto Fit</button>
+            </div>
+          ` : ''}
         </div>
         
         ${this._renderKindInfo()}
         
-        <div class="${this._layout}">
-          ${this._renderWidgets()}
-        </div>
+        ${useColumnLayout ? this._renderColumnLayout() : html`
+          <div class="${this._layout}">
+            ${this._renderWidgets()}
+          </div>
+        `}
       </div>
     `;
   }
@@ -398,6 +445,45 @@ class MagisterSchoolCard extends LitElement {
       </div>
     `;
   }
+
+  _renderColumnLayout() {
+    const columns = this.config.widget_columns;
+    const columnKeys = Object.keys(columns).sort();
+
+    return html`
+      <div class="column-container">
+        ${columnKeys.map(columnKey => html`
+          <div class="column">
+            ${this._renderWidgetsForColumn(columns[columnKey])}
+          </div>
+        `)}
+      </div>
+    `;
+  }
+
+  _renderWidgetsForColumn(widgetNames) {
+    if (!widgetNames || !Array.isArray(widgetNames)) return [];
+    
+    return widgetNames.map(widgetName => this._getWidgetByName(widgetName)).filter(w => w);
+  }
+
+  _getWidgetByName(name) {
+    switch(name) {
+      case 'stats': return this._renderStatsWidget();
+      case 'volgende_les': return this._renderVolgendeLesWidget();
+      case 'rooster_vandaag': return this._renderRoosterWidget();
+      case 'rooster_meta': return this._renderRoosterMetaWidget();
+      case 'rooster_morgen': return this._renderRoosterMorgenWidget();
+      case 'cijfers': return this._renderCijfersWidget();
+      case 'opdrachten': return this._renderOpdrachtenWidget();
+      case 'absenties': return this._renderAbsentiesWidget();
+      case 'wijzigingen': return this._renderWijzigingenWidget();
+      case 'aanmeldingen': return this._renderAanmeldingenWidget();
+      case 'activiteiten': return this._renderActiviteitenWidget();
+      default: return null;
+    }
+  }
+
 
   _renderWidgets() {
     const showWidgets = this.config.show_widgets || ['stats', 'volgende_les', 'rooster_vandaag', 'cijfers', 'opdrachten'];
