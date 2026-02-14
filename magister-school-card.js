@@ -376,8 +376,8 @@ class MagisterSchoolCard extends LitElement {
     
     // Bepaal kindnaam op basis van entity naam
     const entityId = this.config.entity;
-    if (entityId.includes('tyas')) {
-      this._kindNaam = 'Tyas Brouwer';
+    if (entityId.includes('maurits')) {
+      this._kindNaam = 'Maurits van der Rijt';
     } else if (entityId.includes('overview')) {
       this._kindNaam = this._data.naam || 'Onbekend';
     } else {
@@ -640,26 +640,53 @@ class MagisterSchoolCard extends LitElement {
   }
 
   _renderCijfersWidget() {
-    const cijfers = this._data.cijfers || [];
+    const cijfersRaw = Array.isArray(this._data.cijfers) ? this._data.cijfers : [];
 
+    // Parse 'YYYY-MM-DD HH:MM:SS' veilig naar timestamp
+    const toTs = (s) => {
+      if (!s) return 0;
+      const d = new Date(String(s).replace(' ', 'T'));
+      const t = d.getTime();
+      return Number.isFinite(t) ? t : 0;
+    };
+
+    // Sorteer: nieuwste eerst. Bij gelijke datum: op vak/omschrijving voor stabiele volgorde.
+    const cijfersSorted = [...cijfersRaw].sort((a, b) => {
+      const tb = toTs(b.ingevoerd_op);
+      const ta = toTs(a.ingevoerd_op);
+      if (tb !== ta) return tb - ta;
+
+      const vb = (b.vak || '').toString().toLowerCase();
+      const va = (a.vak || '').toString().toLowerCase();
+      if (vb !== va) return vb.localeCompare(va);
+
+      const ob = (b.omschrijving || '').toString().toLowerCase();
+      const oa = (a.omschrijving || '').toString().toLowerCase();
+      return ob.localeCompare(oa);
+    });
+
+    const recent = cijfersSorted.slice(0, 5);
+    
     return html`
       <div class="widget">
         <div class="widget-header">
           <h3 class="widget-title">🎓 Recente Cijfers</h3>
-          <span class="widget-icon">${cijfers.length}</span>
+          <span class="widget-icon">${cijfersRaw.length}</span>
         </div>
         <div class="widget-content">
-          ${cijfers.length > 0 ? 
-            cijfers.slice(-5).map(cijfer => html`
-              <div class="cijfer-item">
-                <div>
-                  <span class="vak">${cijfer.vak?.toUpperCase()}</span>: 
-                  <span class="waarde">${cijfer.waarde}</span>
+          ${recent.length > 0
+            ? recent.map(cijfer => html`
+                <div class="cijfer-item">
+                  <div>
+                    <span class="vak">${(cijfer.vak || '').toUpperCase()}</span>:
+                    <span class="waarde">${cijfer.waarde ?? ''}</span>
+                  </div>
+                  <div class="tijd">
+                    ${cijfer.omschrijving || ''}${cijfer.ingevoerd_op ? ` - ${String(cijfer.ingevoerd_op).substr(0, 10).split('-').reverse().join('-')}` : ''}
+                  </div>
                 </div>
-                <div class="tijd">${cijfer.omschrijving} - ${cijfer.ingevoerd_op?.substr(0, 10)}</div>
-              </div>
-            `) : 
-            html`<div class="empty-state">Geen cijfers beschikbaar</div>`
+              `)
+            : html`<div class="empty-state">Geen cijfers beschikbaar</div>`
           }
         </div>
       </div>
@@ -722,7 +749,7 @@ class MagisterSchoolCard extends LitElement {
           ${absenties.length > 0 ? 
             absenties.slice(-3).map(absentie => html`
               <div class="afspraak-item">
-                <div><strong>${absentie.start?.substr(0, 10)}</strong></div>
+                <div><strong>${absentie.start?.substr(0, 10).split('-').reverse().join('-')}</strong></div>
                 <div>${absentie.omschrijving}</div>
                 ${absentie.afspraak ? html`<div class="tijd">${absentie.afspraak}</div>` : ''}
               </div>
