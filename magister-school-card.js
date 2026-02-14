@@ -287,6 +287,12 @@ class MagisterSchoolCard extends LitElement {
       font-weight: bold;
     }
     
+    .cijfer-item .wf {
+      font-size: 0.85em;
+      opacity: 0.75;
+      margin-left: 4px;
+    }
+    
     .tijd { 
       font-size: 0.9em; 
       color: var(--secondary-text-color);
@@ -650,11 +656,12 @@ class MagisterSchoolCard extends LitElement {
         </div>
         <div class="widget-content">
           ${cijfers.length > 0 ? 
-            cijfers.slice(-5).map(cijfer => html`
+            cijfers.slice(0, 5).map(cijfer => html`
               <div class="cijfer-item">
                 <div>
                   <span class="vak">${cijfer.vak?.toUpperCase()}</span>: 
                   <span class="waarde">${cijfer.waarde}</span>
+                  ${cijfer.weegfactor ? html` <span class="wf">(x${cijfer.weegfactor})</span>` : ''}
                 </div>
                 <div class="tijd">${cijfer.omschrijving} - ${cijfer.ingevoerd_op?.substr(0, 10)}</div>
               </div>
