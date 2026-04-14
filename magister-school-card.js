@@ -130,10 +130,9 @@ class MagisterSchoolCard extends LitElement {
       flex-direction: column;
       gap: 20px;
       flex: 1;
-      min-width: 0; /* Prevent flex items from overflowing */
+      min-width: 0;
     }
 
-    /* Responsive aanpassingen voor kolommen */
     @media (max-width: 1200px) {
       .column-container {
         flex-wrap: wrap;
@@ -156,7 +155,6 @@ class MagisterSchoolCard extends LitElement {
       }
     }
     
-    /* Responsive breakpoints */
     @media (max-width: 1200px) {
       .grid-3 {
         grid-template-columns: repeat(2, 1fr);
@@ -275,6 +273,34 @@ class MagisterSchoolCard extends LitElement {
     .cijfer-item:hover, .afspraak-item:hover, .opdracht-item:hover {
       background: var(--secondary-background-color);
     }
+
+    /* Uitval styling */
+    .afspraak-item.uitval {
+      border-left-color: var(--error-color, #f44336);
+      background: rgba(244, 67, 54, 0.08);
+      opacity: 0.85;
+      position: relative;
+    }
+
+    .afspraak-item.uitval .uitval-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--error-color, #f44336);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.78em;
+      font-weight: bold;
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    .afspraak-item.uitval .les-tijd,
+    .afspraak-item.uitval .les-omschrijving {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
     
     .vak { 
       font-weight: bold; 
@@ -356,8 +382,7 @@ class MagisterSchoolCard extends LitElement {
     this.config = {
       layout: 'auto',
       show_widgets: ['stats', 'volgende_les', 'rooster_vandaag', 'rooster_morgen', 'rooster_meta', 'cijfers', 'opdrachten', 'absenties', 'wijzigingen'],
-      // Nieuwe optie: verdeel widgets over kolommen
-      widget_columns: null, // Bijvoorbeeld: { column1: ['stats', 'rooster_vandaag'], column2: ['cijfers', 'opdrachten'], column3: ['volgende_les'] }
+      widget_columns: null,
       ...config
     };
   }
@@ -380,16 +405,42 @@ class MagisterSchoolCard extends LitElement {
   _extractKindInfo() {
     if (!this._data) return;
     
-    // Bepaal kindnaam op basis van entity naam
     const entityId = this.config.entity;
     if (entityId.includes('tyas')) {
       this._kindNaam = 'Tyas Brouwer';
     } else if (entityId.includes('overview')) {
       this._kindNaam = this._data.naam || 'Onbekend';
     } else {
-      // Fallback: gebruik entity naam
       this._kindNaam = entityId.replace('sensor.magister_', '').replace(/_/g, ' ');
     }
+  }
+
+  /**
+   * Converteert een UTC datetime string ("2026-04-14 08:35:00") naar lokale tijd "HH:MM".
+   * De Magister sensor slaat tijden op in UTC; we converteren naar de lokale tijdzone
+   * van de browser zodat de weergave klopt met de werkelijke lestijden.
+   */
+  _formatTijd(dateStr) {
+    if (!dateStr) return '';
+    // Vervang spatie door 'T' en voeg 'Z' toe zodat JS het als UTC herkent
+    const utcStr = dateStr.replace(' ', 'T') + 'Z';
+    const date = new Date(utcStr);
+    if (isNaN(date.getTime())) return dateStr.substr(11, 5);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+
+  /**
+   * Geeft de lokale datum terug als "YYYY-MM-DD" voor een UTC datetime string.
+   */
+  _getLocaleDateStr(dateStr) {
+    if (!dateStr) return '';
+    const utcStr = dateStr.replace(' ', 'T') + 'Z';
+    const date = new Date(utcStr);
+    if (isNaN(date.getTime())) return dateStr.substr(0, 10);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   _setLayout(layout) {
@@ -405,7 +456,6 @@ class MagisterSchoolCard extends LitElement {
       `;
     }
 
-    // Controleer of we een kolom-gebaseerde layout gebruiken
     const useColumnLayout = this.config.widget_columns && Object.keys(this.config.widget_columns).length > 0;
 
     return html`
@@ -469,7 +519,6 @@ class MagisterSchoolCard extends LitElement {
 
   _renderWidgetsForColumn(widgetNames) {
     if (!widgetNames || !Array.isArray(widgetNames)) return [];
-    
     return widgetNames.map(widgetName => this._getWidgetByName(widgetName)).filter(w => w);
   }
 
@@ -490,64 +539,43 @@ class MagisterSchoolCard extends LitElement {
     }
   }
 
-
   _renderWidgets() {
     const showWidgets = this.config.show_widgets || ['stats', 'volgende_les', 'rooster_vandaag', 'cijfers', 'opdrachten'];
     const widgets = [];
     
-    // Always show these core widgets first
-    if (showWidgets.includes('stats')) {
-      widgets.push(this._renderStatsWidget());
-    }
-    
-    if (showWidgets.includes('volgende_les')) {
-      widgets.push(this._renderVolgendeLesWidget());
-    }
-    
-    if (showWidgets.includes('rooster_vandaag')) {
-      widgets.push(this._renderRoosterWidget());
-    }
-
-    if (showWidgets.includes('rooster_meta')) {
-      widgets.push(this._renderRoosterMetaWidget());
-    }
-
-    if (showWidgets.includes('rooster_morgen')) {
-      widgets.push(this._renderRoosterMorgenWidget());
-    }
-    
-    if (showWidgets.includes('cijfers')) {
-      widgets.push(this._renderCijfersWidget());
-    }
-    
-    if (showWidgets.includes('opdrachten')) {
-      widgets.push(this._renderOpdrachtenWidget());
-    }
-    
-    if (showWidgets.includes('absenties')) {
-      widgets.push(this._renderAbsentiesWidget());
-    }
-    
-    if (showWidgets.includes('wijzigingen')) {
-      widgets.push(this._renderWijzigingenWidget());
-    }
-
-    if (showWidgets.includes('aanmeldingen')) {
-      widgets.push(this._renderAanmeldingenWidget());
-    }
-
-    if (showWidgets.includes('activiteiten')) {
-      widgets.push(this._renderActiviteitenWidget());
-    }
+    if (showWidgets.includes('stats')) widgets.push(this._renderStatsWidget());
+    if (showWidgets.includes('volgende_les')) widgets.push(this._renderVolgendeLesWidget());
+    if (showWidgets.includes('rooster_vandaag')) widgets.push(this._renderRoosterWidget());
+    if (showWidgets.includes('rooster_meta')) widgets.push(this._renderRoosterMetaWidget());
+    if (showWidgets.includes('rooster_morgen')) widgets.push(this._renderRoosterMorgenWidget());
+    if (showWidgets.includes('cijfers')) widgets.push(this._renderCijfersWidget());
+    if (showWidgets.includes('opdrachten')) widgets.push(this._renderOpdrachtenWidget());
+    if (showWidgets.includes('absenties')) widgets.push(this._renderAbsentiesWidget());
+    if (showWidgets.includes('wijzigingen')) widgets.push(this._renderWijzigingenWidget());
+    if (showWidgets.includes('aanmeldingen')) widgets.push(this._renderAanmeldingenWidget());
+    if (showWidgets.includes('activiteiten')) widgets.push(this._renderActiviteitenWidget());
 
     return widgets;
   }
 
+  _renderAfspraakItem(afspraak) {
+    const isUitval = afspraak.is_uitval === true;
+    return html`
+      <div class="afspraak-item ${isUitval ? 'uitval' : ''}">
+        ${isUitval ? html`<div class="uitval-label">🚫 Vervallen</div>` : ''}
+        <div class="les-tijd"><strong>${this._formatTijd(afspraak.start)} - ${this._formatTijd(afspraak.einde)}</strong></div>
+        <div class="les-omschrijving">${afspraak.omschrijving}</div>
+        ${afspraak.lokaal ? html`<div class="tijd">📍 ${afspraak.lokaal}</div>` : ''}
+        ${afspraak.is_huiswerk ? html`<span class="badge">HW</span>` : ''}
+      </div>
+    `;
+  }
+
   _renderRoosterWidget() {
     const afspraken = this._data.afspraken || [];
-    const vandaag = new Date().toISOString().split('T')[0];
-    const afsprakenVandaag = afspraken.filter(afspraak => 
-      afspraak.start?.startsWith(vandaag)
+    const vandaag = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in lokale tijd
+    const afsprakenVandaag = afspraken.filter(afspraak =>
+      this._getLocaleDateStr(afspraak.start) === vandaag
     );
 
     return html`
@@ -558,14 +586,7 @@ class MagisterSchoolCard extends LitElement {
         </div>
         <div class="widget-content">
           ${afsprakenVandaag.length > 0 ? 
-            afsprakenVandaag.map(afspraak => html`
-              <div class="afspraak-item">
-                <div><strong>${afspraak.start?.substr(11, 5)}-${afspraak.einde?.substr(11, 5)}</strong></div>
-                <div>${afspraak.omschrijving}</div>
-                ${afspraak.lokaal ? html`<div class="tijd">📍 ${afspraak.lokaal}</div>` : ''}
-                ${afspraak.is_huiswerk ? html`<span class="badge">HW</span>` : ''}
-              </div>
-            `) : 
+            afsprakenVandaag.map(afspraak => this._renderAfspraakItem(afspraak)) : 
             html`<div class="empty-state">Geen lessen vandaag 🎉</div>`
           }
         </div>
@@ -577,15 +598,12 @@ class MagisterSchoolCard extends LitElement {
     const hour = new Date().getHours();
     const afspraken = this._data.afspraken || [];
     
-    // Bepaal welke dag we tonen
     const isVandaag = hour < 18;
     const targetDate = new Date();
-    if (!isVandaag) {
-      targetDate.setDate(targetDate.getDate() + 1);
-    }
-    const dateStr = targetDate.toISOString().split('T')[0];
-    const afsprakenFiltered = afspraken.filter(afspraak => 
-      afspraak.start?.startsWith(dateStr)
+    if (!isVandaag) targetDate.setDate(targetDate.getDate() + 1);
+    const dateStr = targetDate.toLocaleDateString('en-CA');
+    const afsprakenFiltered = afspraken.filter(afspraak =>
+      this._getLocaleDateStr(afspraak.start) === dateStr
     );
 
     const titel = isVandaag ? '📅 Rooster (Vandaag)' : '📅 Rooster (Morgen)';
@@ -598,14 +616,7 @@ class MagisterSchoolCard extends LitElement {
         </div>
         <div class="widget-content">
           ${afsprakenFiltered.length > 0 ?
-            afsprakenFiltered.map(afspraak => html`
-              <div class="afspraak-item">
-                <div><strong>${afspraak.start?.substr(11, 5)}-${afspraak.einde?.substr(11, 5)}</strong></div>
-                <div>${afspraak.omschrijving}</div>
-                ${afspraak.lokaal ? html`<div class="tijd">📍 ${afspraak.lokaal}</div>` : ''}
-                ${afspraak.is_huiswerk ? html`<span class="badge">HW</span>` : ''}
-              </div>
-            `) :
+            afsprakenFiltered.map(afspraak => this._renderAfspraakItem(afspraak)) :
             html`<div class="empty-state">Geen lessen ${isVandaag ? 'vandaag' : 'morgen'} 🎉</div>`
           }
         </div>
@@ -617,9 +628,9 @@ class MagisterSchoolCard extends LitElement {
     const afspraken = this._data.afspraken || [];
     const morgenDate = new Date();
     morgenDate.setDate(morgenDate.getDate() + 1);
-    const morgen = morgenDate.toISOString().split('T')[0];
+    const morgen = morgenDate.toLocaleDateString('en-CA');
     const afsprakenMorgen = afspraken.filter(afspraak =>
-      afspraak.start?.startsWith(morgen)
+      this._getLocaleDateStr(afspraak.start) === morgen
     );
 
     return html`
@@ -630,14 +641,7 @@ class MagisterSchoolCard extends LitElement {
         </div>
         <div class="widget-content">
           ${afsprakenMorgen.length > 0 ?
-            afsprakenMorgen.map(afspraak => html`
-              <div class="afspraak-item">
-                <div><strong>${afspraak.start?.substr(11, 5)}-${afspraak.einde?.substr(11, 5)}</strong></div>
-                <div>${afspraak.omschrijving}</div>
-                ${afspraak.lokaal ? html`<div class="tijd">📍 ${afspraak.lokaal}</div>` : ''}
-                ${afspraak.is_huiswerk ? html`<span class="badge">HW</span>` : ''}
-              </div>
-            `) :
+            afsprakenMorgen.map(afspraak => this._renderAfspraakItem(afspraak)) :
             html`<div class="empty-state">Geen lessen morgen 🎉</div>`
           }
         </div>
@@ -676,12 +680,6 @@ class MagisterSchoolCard extends LitElement {
   _renderOpdrachtenWidget() {
     const opdrachten = this._data.opdrachten || [];
     const openOpdrachten = opdrachten.filter(opdracht => !opdracht.ingeleverd_op);
-    const bijnaTeLaat = openOpdrachten.filter(opdracht => {
-      const inleverDatum = new Date(opdracht.inleveren_voor);
-      const nu = new Date();
-      const dagenOver = (inleverDatum - nu) / (1000 * 60 * 60 * 24);
-      return dagenOver < 2;
-    });
 
     return html`
       <div class="widget">
@@ -754,7 +752,7 @@ class MagisterSchoolCard extends LitElement {
           ${wijzigingen.length > 0 ? 
             wijzigingen.slice(-3).map(wijziging => html`
               <div class="afspraak-item">
-                <div><strong>${wijziging.start?.substr(0, 16)}</strong></div>
+                <div><strong>${this._formatTijd(wijziging.start)} - ${this._formatTijd(wijziging.einde)}</strong></div>
                 <div>${wijziging.omschrijving}</div>
                 ${wijziging.lokaal ? html`<div class="tijd">📍 ${wijziging.lokaal}</div>` : ''}
               </div>
