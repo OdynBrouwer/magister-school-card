@@ -422,20 +422,20 @@ class MagisterSchoolCard extends LitElement {
    */
   _formatTijd(dateStr) {
     if (!dateStr) return '';
-    // Vervang spatie door 'T' en voeg 'Z' toe zodat JS het als UTC herkent
-    const utcStr = dateStr.replace(' ', 'T') + 'Z';
-    const date = new Date(utcStr);
+    // Vervang spatie door 'T' zodat JS het als lokale tijd behandelt wanneer er geen timezone is opgegeven.
+    const localStr = dateStr.replace(' ', 'T');
+    const date = new Date(localStr);
     if (isNaN(date.getTime())) return dateStr.substr(11, 5);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
   }
 
   /**
-   * Geeft de lokale datum terug als "YYYY-MM-DD" voor een UTC datetime string.
+   * Geeft de lokale datum terug als "YYYY-MM-DD" voor een datumtijd-waarde.
    */
   _getLocaleDateStr(dateStr) {
     if (!dateStr) return '';
-    const utcStr = dateStr.replace(' ', 'T') + 'Z';
-    const date = new Date(utcStr);
+    const localStr = dateStr.replace(' ', 'T');
+    const date = new Date(localStr);
     if (isNaN(date.getTime())) return dateStr.substr(0, 10);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
