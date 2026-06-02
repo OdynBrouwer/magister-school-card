@@ -431,16 +431,27 @@ class MagisterSchoolCard extends LitElement {
 
   /**
    * Geeft de lokale datum terug als "YYYY-MM-DD" voor een datumtijd-waarde.
+   * De Magister data bevat al lokale tijd (omgezet door datum() functie).
+   * We gebruiken substr(0,10) om de datum direct uit de string te halen,
+   * zodat we geen last hebben van JS Date timezone-offsets.
    */
   _getLocaleDateStr(dateStr) {
     if (!dateStr) return '';
-    const localStr = dateStr.replace(' ', 'T');
-    const date = new Date(localStr);
-    if (isNaN(date.getTime())) return dateStr.substr(0, 10);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return dateStr.substr(0, 10);
+  }
+
+  /**
+   * Geeft de datum van vandaag in lokale YYYY-MM-DD formaat (string).
+   * Gebruikt toLocaleDateString('en-CA') die altijd YYYY-MM-DD retourneert.
+   */
+  _getVandaag() {
+    return new Date().toLocaleDateString('en-CA');
+  }
+
+  _getMorgen() {
+    const morgen = new Date();
+    morgen.setDate(morgen.getDate() + 1);
+    return morgen.toLocaleDateString('en-CA');
   }
 
   _setLayout(layout) {
@@ -577,7 +588,7 @@ class MagisterSchoolCard extends LitElement {
 
   _renderRoosterWidget() {
     const afspraken = this._data.afspraken || [];
-    const vandaag = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in lokale tijd
+    const vandaag = this._getVandaag();
     const afsprakenVandaag = afspraken.filter(afspraak =>
       this._getLocaleDateStr(afspraak.start) === vandaag
     );
@@ -603,9 +614,7 @@ class MagisterSchoolCard extends LitElement {
     const afspraken = this._data.afspraken || [];
     
     const isVandaag = hour < 18;
-    const targetDate = new Date();
-    if (!isVandaag) targetDate.setDate(targetDate.getDate() + 1);
-    const dateStr = targetDate.toLocaleDateString('en-CA');
+    const dateStr = isVandaag ? this._getVandaag() : this._getMorgen();
     const afsprakenFiltered = afspraken.filter(afspraak =>
       this._getLocaleDateStr(afspraak.start) === dateStr
     );
@@ -630,9 +639,7 @@ class MagisterSchoolCard extends LitElement {
 
   _renderRoosterMorgenWidget() {
     const afspraken = this._data.afspraken || [];
-    const morgenDate = new Date();
-    morgenDate.setDate(morgenDate.getDate() + 1);
-    const morgen = morgenDate.toLocaleDateString('en-CA');
+    const morgen = this._getMorgen();
     const afsprakenMorgen = afspraken.filter(afspraak =>
       this._getLocaleDateStr(afspraak.start) === morgen
     );
