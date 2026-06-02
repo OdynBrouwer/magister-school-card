@@ -381,7 +381,7 @@ class MagisterSchoolCard extends LitElement {
   setConfig(config) {
     this.config = {
       layout: 'auto',
-      show_widgets: ['stats', 'volgende_les', 'rooster_vandaag', 'rooster_morgen', 'rooster_meta', 'cijfers', 'opdrachten', 'absenties', 'wijzigingen'],
+      show_widgets: ['stats', 'schooltijden', 'volgende_schooldag', 'rooster_vandaag', 'cijfers', 'opdrachten'],
       widget_columns: null,
       ...config
     };
@@ -525,6 +525,8 @@ class MagisterSchoolCard extends LitElement {
   _getWidgetByName(name) {
     switch(name) {
       case 'stats': return this._renderStatsWidget();
+      case 'schooltijden': return this._renderSchooltijdenWidget();
+      case 'volgende_schooldag': return this._renderVolgendeSchooldagWidget();
       case 'volgende_les': return this._renderVolgendeLesWidget();
       case 'rooster_vandaag': return this._renderRoosterWidget();
       case 'rooster_meta': return this._renderRoosterMetaWidget();
@@ -540,10 +542,12 @@ class MagisterSchoolCard extends LitElement {
   }
 
   _renderWidgets() {
-    const showWidgets = this.config.show_widgets || ['stats', 'volgende_les', 'rooster_vandaag', 'cijfers', 'opdrachten'];
+    const showWidgets = this.config.show_widgets || ['stats', 'schooltijden', 'volgende_schooldag', 'rooster_vandaag', 'cijfers', 'opdrachten'];
     const widgets = [];
     
     if (showWidgets.includes('stats')) widgets.push(this._renderStatsWidget());
+    if (showWidgets.includes('schooltijden')) widgets.push(this._renderSchooltijdenWidget());
+    if (showWidgets.includes('volgende_schooldag')) widgets.push(this._renderVolgendeSchooldagWidget());
     if (showWidgets.includes('volgende_les')) widgets.push(this._renderVolgendeLesWidget());
     if (showWidgets.includes('rooster_vandaag')) widgets.push(this._renderRoosterWidget());
     if (showWidgets.includes('rooster_meta')) widgets.push(this._renderRoosterMetaWidget());
@@ -876,6 +880,78 @@ class MagisterSchoolCard extends LitElement {
             `) : 
             html`<div class="empty-state">Geen activiteiten</div>`
           }
+        </div>
+      </div>
+    `;
+  }
+
+  _renderSchooltijdenWidget() {
+    const startVandaag = this._data.school_start_vandaag || 'Geen';
+    const eindeVandaag = this._data.school_einde_vandaag || 'Geen';
+    const lessen = this._data.lessen_vandaag || [];
+
+    return html`
+      <div class="widget">
+        <div class="widget-header">
+          <h3 class="widget-title">🏫 Schooltijden Vandaag</h3>
+          <span class="widget-icon">${lessen.length}</span>
+        </div>
+        <div class="widget-content">
+          <div class="afspraak-item" style="border-left: 4px solid var(--success-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>⏰ Eerste les:</span>
+              <strong style="color: var(--accent-color);">${startVandaag}</strong>
+            </div>
+          </div>
+          <div class="afspraak-item" style="border-left: 4px solid var(--warning-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>🔔 Laatste les:</span>
+              <strong style="color: var(--accent-color);">${eindeVandaag}</strong>
+            </div>
+          </div>
+          ${lessen.length > 0 ? lessen.map(les => html`
+            <div class="afspraak-item" style="border-left: 4px solid var(--primary-color);">
+              <div><strong>${les.start} - ${les.einde}</strong> ${les.vak ? html`<span class="vak">${les.vak}</span>` : ''}</div>
+              ${les.omschrijving ? html`<div>${les.omschrijving}</div>` : ''}
+              ${les.lokaal ? html`<div class="tijd">📍 ${les.lokaal}</div>` : ''}
+            </div>
+          `) : html`<div class="empty-state">Geen lessen vandaag 🎉</div>`}
+        </div>
+      </div>
+    `;
+  }
+
+  _renderVolgendeSchooldagWidget() {
+    const volgDag = this._data.volgende_schooldag || 'Geen';
+    const volgStart = this._data.volgende_schooldag_start || 'Geen';
+    const volgEinde = this._data.volgende_schooldag_einde || 'Geen';
+
+    return html`
+      <div class="widget">
+        <div class="widget-header">
+          <h3 class="widget-title">📆 Volgende Schooldag</h3>
+          <span class="widget-icon">→</span>
+        </div>
+        <div class="widget-content">
+          <div class="afspraak-item" style="border-left: 4px solid var(--accent-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>📅 Datum:</span>
+              <strong style="color: var(--accent-color);">${volgDag}</strong>
+            </div>
+          </div>
+          <div class="afspraak-item" style="border-left: 4px solid var(--success-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>⏰ Eerste les:</span>
+              <strong style="color: var(--accent-color);">${volgStart}</strong>
+            </div>
+          </div>
+          <div class="afspraak-item" style="border-left: 4px solid var(--warning-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>🔔 Laatste les:</span>
+              <strong style="color: var(--accent-color);">${volgEinde}</strong>
+            </div>
+          </div>
+          ${volgDag === 'Geen' ? html`<div class="empty-state">Geen komende schooldag gevonden</div>` : ''}
         </div>
       </div>
     `;
