@@ -9,7 +9,7 @@ Een responsive Lovelace-card voor de **[Magister School Integration](https://git
 
 De card is ontworpen voor een snel schooloverzicht in Home Assistant. Kies zelf welke widgets zichtbaar zijn, gebruik een automatische gridindeling of verdeel de widgets over eigen kolommen.
 
-**Huidige versie:** [v1.3.0](https://github.com/OdynBrouwer/magister-school-card/releases/tag/v1.3.0)
+**Huidige versie:** [v1.3.1](https://github.com/OdynBrouwer/magister-school-card/releases/tag/v1.3.1)
 
 ## Inhoud
 
@@ -54,15 +54,15 @@ Zie de configuratie-voorbeelden hieronder.
 
 ## 📥 Handmatige installatie
 
-1. Download `magister-school-card.js` uit de [releases](https://github.com/OdynBrouwer/magister-school-card/releases)
+1. Download `dist/magister-school-card.js` uit de [releases](https://github.com/OdynBrouwer/magister-school-card/releases)
 2. Kopieer het bestand naar je Home Assistant `www` map, bijvoorbeeld:
    
-   `www/community/magister-school-card/magister-school-card.js`
+  `www/community/magister-school-card/magister-school-card.js`
 
 3. Voeg een resource toe in Lovelace (**Instellingen → Dashboards → Resources → Add Resource**):
 
    ```yaml
-   url: /local/community/magister-school-card/magister-school-card.js
+  url: /local/community/magister-school-card/magister-school-card.js
    type: module
    ```
 
@@ -313,16 +313,25 @@ De component is gebouwd met [Lit](https://lit.dev/) als ES-module.
 ### Lokaal ontwikkelen
 
 1. Clone de repository
-2. Bewerk `magister-school-card.js`
-3. Kopieer naar je Home Assistant `www` folder
-4. Voeg als lokale resource toe:
+2. Installeer de builddependencies met `npm install`
+3. Bewerk `magister-school-card.js`
+4. Bouw de distributiebundel met `npm run build`
+5. Kopieer `dist/magister-school-card.js` naar je Home Assistant `www` folder
+6. Voeg als lokale resource toe:
 
    ```yaml
    url: /local/magister-school-card/magister-school-card.js
    type: module
    ```
 
-5. Hard refresh browser (CTRL + F5) na elke wijziging
+7. Hard refresh browser (CTRL + F5) na elke wijziging
+
+### Release-build
+
+Voor een release wordt `npm run build` uitgevoerd. De HACS-configuratie gebruikt
+`dist/magister-school-card.js` als distributiebestand. Verhoog daarna de versie
+in `package.json`, werk `CHANGELOG.md` bij en publiceer een GitHub-release met
+dezelfde versie-tag.
 
 ### Custom element registratie
 
