@@ -5,6 +5,11 @@
 - Added the optional `week_schooltijden` widget.
 - Shows the first start time and last end time for Monday through Friday.
 
+### v1.3.1
+
+- Added a reproducible npm/Rollup build for HACS distribution.
+- HACS now installs the bundled file from `dist/magister-school-card.js`.
+
 Een responsive Lovelace custom card voor de [Magister School Integration](https://github.com/OdynBrouwer/magister-school-integration).
 
 ### ⚠️ Belangrijk voor bestaande gebruikers (v1.0.4+)

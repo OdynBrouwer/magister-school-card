@@ -1,0 +1,30 @@
+{
+  "name": "magister-school-card",
+  "version": "1.3.1",
+  "description": "Responsive Lovelace card for the Magister School Integration",
+  "repository": "https://github.com/OdynBrouwer/magister-school-card",
+  "author": "OdynBrouwer",
+  "license": "MIT",
+  "type": "module",
+  "module": "dist/magister-school-card.js",
+  "keywords": [
+    "home-assistant",
+    "homeassistant",
+    "hacs",
+    "lovelace",
+    "custom-cards",
+    "magister"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "check": "node --check dist/magister-school-card.js"
+  },
+  "dependencies": {
+    "lit": "2.6.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.52.5"
+  }
+}
