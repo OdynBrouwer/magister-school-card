@@ -1,11 +1,30 @@
 # Magister School Card
 
 ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2023.8+-blue?logo=home-assistant)
+![HACS](https://img.shields.io/badge/HACS-Custom-orange?logo=home-assistant)
+[![GitHub release](https://img.shields.io/github/v/release/OdynBrouwer/magister-school-card)](https://github.com/OdynBrouwer/magister-school-card/releases)
 ![License](https://img.shields.io/github/license/OdynBrouwer/magister-school-card)
 
-Een mooie en responsive Lovelace-card voor de **[Magister School Integration](https://github.com/OdynBrouwer/magister-school-integration)**. Toon rooster, cijfers, huiswerk, wijzigingen en meer in één overzichtelijke kaart.
+Een responsive Lovelace-card voor de **[Magister School Integration](https://github.com/OdynBrouwer/magister-school-integration)**. Toon rooster, schooltijden, cijfers, huiswerk, wijzigingen en meer in één overzichtelijke kaart.
+
+De card is ontworpen voor een snel schooloverzicht in Home Assistant. Kies zelf welke widgets zichtbaar zijn, gebruik een automatische gridindeling of verdeel de widgets over eigen kolommen.
+
+**Huidige versie:** [v1.3.0](https://github.com/OdynBrouwer/magister-school-card/releases/tag/v1.3.0)
+
+## Inhoud
+
+- [Installatie](#installatie-via-hacs-aanbevolen)
+- [Gebruik](#gebruik--voorbeeld-configuratie)
+- [Beschikbare widgets](#-beschikbare-widgets)
+- [Geavanceerde configuratie](#️-geavanceerde-configuratie)
+- [Veelvoorkomende problemen](#-veelvoorkomende-problemen)
+- [Ontwikkeling](#️-ontwikkeling)
 
 ## 📦 Installatie via HACS (aanbevolen)
+
+[![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=OdynBrouwer&repository=magister-school-card&category=dashboard)
+
+Deze card wordt als custom repository in HACS aangeboden. Gebruik de knop hierboven of voeg de repository handmatig toe.
 
 ### Stap 1: Voeg custom repository toe
 
@@ -24,6 +43,10 @@ Een mooie en responsive Lovelace-card voor de **[Magister School Integration](ht
 3. Klik rechtsboven op de blauwe **"DOWNLOAD"** knop
 4. Klik nogmaals op **"Download"** in het popup venster
 5. **Herstart Home Assistant** (of druk **CTRL + F5** om de cache te verversen)
+
+### Updates
+
+Na installatie via HACS worden nieuwe GitHub-releases als update aangeboden. Na een update kan een browser-refresh nodig zijn om de nieuwe cardcode te laden.
 
 ### Stap 3: Voeg de card toe aan je dashboard
 
