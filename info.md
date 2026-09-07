@@ -5,6 +5,12 @@
 - Added the optional `week_schooltijden` widget.
 - Shows the first start time and last end time for Monday through Friday.
 
+### v1.3.2
+
+- Restored the card to the repository root so updates do not change the HACS
+  resource path.
+- Fixes "Custom element doesn't exist" after updating from an older version.
+
 ### v1.3.1
 
 - Added a reproducible npm/Rollup build for HACS distribution.

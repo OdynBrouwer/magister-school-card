@@ -9,7 +9,7 @@ Een responsive Lovelace-card voor de **[Magister School Integration](https://git
 
 De card is ontworpen voor een snel schooloverzicht in Home Assistant. Kies zelf welke widgets zichtbaar zijn, gebruik een automatische gridindeling of verdeel de widgets over eigen kolommen.
 
-**Huidige versie:** [v1.3.1](https://github.com/OdynBrouwer/magister-school-card/releases/tag/v1.3.1)
+**Huidige versie:** [v1.3.2](https://github.com/OdynBrouwer/magister-school-card/releases/tag/v1.3.2)
 
 ## Inhoud
 
@@ -54,7 +54,7 @@ Zie de configuratie-voorbeelden hieronder.
 
 ## 📥 Handmatige installatie
 
-1. Download `dist/magister-school-card.js` uit de [releases](https://github.com/OdynBrouwer/magister-school-card/releases)
+1. Download `magister-school-card.js` uit de [releases](https://github.com/OdynBrouwer/magister-school-card/releases)
 2. Kopieer het bestand naar je Home Assistant `www` map, bijvoorbeeld:
    
   `www/community/magister-school-card/magister-school-card.js`
@@ -314,9 +314,9 @@ De component is gebouwd met [Lit](https://lit.dev/) als ES-module.
 
 1. Clone de repository
 2. Installeer de builddependencies met `npm install`
-3. Bewerk `magister-school-card.js`
-4. Bouw de distributiebundel met `npm run build`
-5. Kopieer `dist/magister-school-card.js` naar je Home Assistant `www` folder
+3. Bewerk de bron in `src/magister-school-card.js`
+4. Bouw de distributiebundel met `npm run build` (schrijft naar `magister-school-card.js`)
+5. Kopieer `magister-school-card.js` naar je Home Assistant `www` folder
 6. Voeg als lokale resource toe:
 
    ```yaml
@@ -329,8 +329,9 @@ De component is gebouwd met [Lit](https://lit.dev/) als ES-module.
 ### Release-build
 
 Voor een release wordt `npm run build` uitgevoerd. De HACS-configuratie gebruikt
-`dist/magister-school-card.js` als distributiebestand. Verhoog daarna de versie
-in `package.json`, werk `CHANGELOG.md` bij en publiceer een GitHub-release met
+`magister-school-card.js` in de repositoryroot als distributiebestand, zodat de
+HACS-resource-URL bij updates stabiel blijft. Verhoog daarna de versie in
+`package.json`, werk `CHANGELOG.md` bij en publiceer een GitHub-release met
 dezelfde versie-tag.
 
 ### Custom element registratie
