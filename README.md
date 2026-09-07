@@ -92,6 +92,7 @@ show_widgets:
 #### 📅 Rooster widgets
 - `rooster_vandaag` — **Altijd** rooster van vandaag
 - `rooster_morgen` — **Altijd** rooster van morgen  
+- `week_schooltijden` — Eerste begintijd en laatste eindtijd per weekdag
 - `rooster_meta` — **Slimme** widget die automatisch schakelt:
   - Vóór 18:00 → toont vandaag
   - Na 18:00 → toont morgen
