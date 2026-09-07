@@ -369,6 +369,29 @@ class MagisterSchoolCard extends LitElement {
     .badge-success {
       background: var(--success-color);
     }
+
+    .schoolweek-row {
+      display: grid;
+      grid-template-columns: minmax(90px, 1fr) minmax(120px, 1fr);
+      gap: 12px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--divider-color);
+    }
+
+    .schoolweek-row:last-child {
+      border-bottom: 0;
+    }
+
+    .schoolweek-day {
+      color: var(--primary-text-color);
+      font-weight: 600;
+    }
+
+    .schoolweek-time {
+      color: var(--secondary-text-color);
+      text-align: right;
+    }
   `;
 
   constructor() {
@@ -537,6 +560,7 @@ class MagisterSchoolCard extends LitElement {
     switch(name) {
       case 'stats': return this._renderStatsWidget();
       case 'schooltijden': return this._renderSchooltijdenWidget();
+      case 'week_schooltijden': return this._renderWeekSchooltijdenWidget();
       case 'volgende_schooldag': return this._renderVolgendeSchooldagWidget();
       case 'volgende_les': return this._renderVolgendeLesWidget();
       case 'rooster_vandaag': return this._renderRoosterWidget();
@@ -558,6 +582,7 @@ class MagisterSchoolCard extends LitElement {
     
     if (showWidgets.includes('stats')) widgets.push(this._renderStatsWidget());
     if (showWidgets.includes('schooltijden')) widgets.push(this._renderSchooltijdenWidget());
+    if (showWidgets.includes('week_schooltijden')) widgets.push(this._renderWeekSchooltijdenWidget());
     if (showWidgets.includes('volgende_schooldag')) widgets.push(this._renderVolgendeSchooldagWidget());
     if (showWidgets.includes('volgende_les')) widgets.push(this._renderVolgendeLesWidget());
     if (showWidgets.includes('rooster_vandaag')) widgets.push(this._renderRoosterWidget());
@@ -655,6 +680,45 @@ class MagisterSchoolCard extends LitElement {
             afsprakenMorgen.map(afspraak => this._renderAfspraakItem(afspraak)) :
             html`<div class="empty-state">Geen lessen morgen 🎉</div>`
           }
+        </div>
+      </div>
+    `;
+  }
+
+  _renderWeekSchooltijdenWidget() {
+    const dayNames = ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag'];
+    const afspraken = (this._data.afspraken || []).filter(afspraak =>
+      afspraak.soort === 'Les' && !afspraak.is_uitval
+    );
+    const days = dayNames.map((name, index) => {
+      const lessons = afspraken.filter(afspraak => {
+        const date = this._getLocaleDateStr(afspraak.start);
+        if (!date) return false;
+        const weekday = new Date(`${date}T12:00:00`).getDay();
+        return (weekday === 0 ? 6 : weekday - 1) === index;
+      });
+
+      if (lessons.length === 0) return { name, start: null, end: null };
+
+      const starts = lessons.map(afspraak => afspraak.start?.substr(11, 5)).filter(Boolean).sort();
+      const ends = lessons.map(afspraak => afspraak.einde?.substr(11, 5)).filter(Boolean).sort();
+      return { name, start: starts[0], end: ends[ends.length - 1] };
+    });
+
+    return html`
+      <div class="widget">
+        <div class="widget-header">
+          <h3 class="widget-title">Schooltijden per week</h3>
+        </div>
+        <div class="widget-content">
+          ${days.map(day => html`
+            <div class="schoolweek-row">
+              <span class="schoolweek-day">${day.name}</span>
+              <span class="schoolweek-time">
+                ${day.start && day.end ? `${day.start} - ${day.end}` : 'Geen lessen'}
+              </span>
+            </div>
+          `)}
         </div>
       </div>
     `;
