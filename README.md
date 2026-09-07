@@ -78,6 +78,29 @@ show_widgets:
   - opdrachten
 ```
 
+**Optie 3: Schooltijden per weekdag**
+```yaml
+type: custom:magister-school-card
+entity: sensor.magister_voornaam_achternaam
+layout: grid-1
+show_widgets:
+  - week_schooltijden
+```
+
+De widget toont per maandag tot en met vrijdag de eerste begintijd en de
+laatste eindtijd van de lessen. Dagen zonder lessen worden als `Geen lessen`
+weergegeven.
+
+**Optie 4: Weekoverzicht met rooster**
+```yaml
+type: custom:magister-school-card
+entity: sensor.magister_voornaam_achternaam
+layout: grid-1
+show_widgets:
+  - week_schooltijden
+  - rooster_meta
+```
+
 ### Configuratie opties
 
 | Optie | Type | Beschrijving | Standaard |
