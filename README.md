@@ -9,7 +9,9 @@ Een responsive Lovelace-card voor de **[Magister School Integration](https://git
 
 De card is ontworpen voor een snel schooloverzicht in Home Assistant. Kies zelf welke widgets zichtbaar zijn, gebruik een automatische gridindeling of verdeel de widgets over eigen kolommen.
 
-**Huidige versie:** [v1.3.2](https://github.com/OdynBrouwer/magister-school-card/releases/tag/v1.3.2)
+![Magister School Card voorbeeld](https://raw.githubusercontent.com/OdynBrouwer/magister-school-card/main/images/preview.png)
+
+**Huidige versie:** [v1.3.3](https://github.com/OdynBrouwer/magister-school-card/releases/tag/v1.3.3)
 
 ## Inhoud
 

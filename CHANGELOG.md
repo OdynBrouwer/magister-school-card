@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.3
+
+- Submitted the card to the official HACS store (dashboard card).
+- Added a HACS validation workflow (`.github/workflows/validate.yml`) and a README preview image.
+- No runtime changes.
+
 ## 1.3.2
 
 - Restored the card to the repository root so the HACS resource path stays
