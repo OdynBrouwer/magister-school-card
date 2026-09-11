@@ -301,6 +301,27 @@ class MagisterSchoolCard extends LitElement {
       text-decoration: line-through;
       opacity: 0.6;
     }
+
+    /* Gewijzigd styling */
+    .afspraak-item.gewijzigd {
+      border-left-color: var(--warning-color, #ff9800);
+      background: rgba(255, 152, 0, 0.08);
+      position: relative;
+    }
+
+    .afspraak-item.gewijzigd .uitval-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--warning-color, #ff9800);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.78em;
+      font-weight: bold;
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+    }
     
     .vak { 
       font-weight: bold; 
@@ -600,9 +621,11 @@ class MagisterSchoolCard extends LitElement {
 
   _renderAfspraakItem(afspraak) {
     const isUitval = afspraak.is_uitval === true;
+    const isGewijzigd = !isUitval && afspraak.was_afwijkend === true;
     return html`
-      <div class="afspraak-item ${isUitval ? 'uitval' : ''}">
+      <div class="afspraak-item ${isUitval ? 'uitval' : ''} ${isGewijzigd ? 'gewijzigd' : ''}">
         ${isUitval ? html`<div class="uitval-label">🚫 Vervallen</div>` : ''}
+        ${isGewijzigd ? html`<div class="uitval-label">🔄 Gewijzigd</div>` : ''}
         <div class="les-tijd"><strong>${this._formatTijd(afspraak.start)} - ${this._formatTijd(afspraak.einde)}</strong></div>
         <div class="les-omschrijving">${afspraak.omschrijving}</div>
         ${afspraak.lokaal ? html`<div class="tijd">📍 ${afspraak.lokaal}</div>` : ''}
@@ -825,13 +848,7 @@ class MagisterSchoolCard extends LitElement {
         </div>
         <div class="widget-content">
           ${wijzigingen.length > 0 ? 
-            wijzigingen.slice(-3).map(wijziging => html`
-              <div class="afspraak-item">
-                <div><strong>${this._formatTijd(wijziging.start)} - ${this._formatTijd(wijziging.einde)}</strong></div>
-                <div>${wijziging.omschrijving}</div>
-                ${wijziging.lokaal ? html`<div class="tijd">📍 ${wijziging.lokaal}</div>` : ''}
-              </div>
-            `) : 
+            wijzigingen.slice(-3).map(wijziging => this._renderAfspraakItem(wijziging)) : 
             html`<div class="empty-state">Geen wijzigingen</div>`
           }
         </div>
@@ -855,8 +872,14 @@ class MagisterSchoolCard extends LitElement {
           </div>
           <div class="afspraak-item">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span>📚 Huiswerk:</span>
-              <strong style="color: var(--accent-color);">${this._data.aantal_huiswerk || 0}</strong>
+              <span>📚 Huiswerk open:</span>
+              <strong style="color: var(--accent-color);">${this._data.aantal_huiswerk_onafgerond ?? this._data.aantal_huiswerk ?? 0}</strong>
+            </div>
+          </div>
+          <div class="afspraak-item">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>✅ Huiswerk afgerond:</span>
+              <strong style="color: var(--accent-color);">${this._data.aantal_huiswerk_afgerond || 0}</strong>
             </div>
           </div>
           <div class="afspraak-item">

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.0
+
+- Stats widget now shows open and completed homework separately, using the new
+  `aantal_huiswerk_onafgerond` and `aantal_huiswerk_afgerond` attributes from
+  Magister integration v2.0.4.
+- Roster and changes widgets now mark lessons that were changed or moved
+  (`was_afwijkend`) with a 🔄 Gewijzigd label, in addition to cancelled lessons.
+
 ## 1.3.3
 
 - Submitted the card to the official HACS store (dashboard card).
