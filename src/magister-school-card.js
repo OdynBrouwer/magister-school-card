@@ -111,6 +111,27 @@ class MagisterSchoolCard extends LitElement {
       width: 100%;
     }
     
+    .grid-4 { 
+      display: grid; 
+      grid-template-columns: repeat(4, 1fr); 
+      gap: 20px; 
+      width: 100%;
+    }
+    
+    .grid-5 { 
+      display: grid; 
+      grid-template-columns: repeat(5, 1fr); 
+      gap: 20px; 
+      width: 100%;
+    }
+    
+    .grid-6 { 
+      display: grid; 
+      grid-template-columns: repeat(6, 1fr); 
+      gap: 20px; 
+      width: 100%;
+    }
+    
     .grid-auto { 
       display: grid; 
       grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
@@ -159,6 +180,12 @@ class MagisterSchoolCard extends LitElement {
       .grid-3 {
         grid-template-columns: repeat(2, 1fr);
       }
+      
+      .grid-4,
+      .grid-5,
+      .grid-6 {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
     
     @media (max-width: 768px) {
@@ -181,7 +208,10 @@ class MagisterSchoolCard extends LitElement {
       }
       
       .grid-2,
-      .grid-3 {
+      .grid-3,
+      .grid-4,
+      .grid-5,
+      .grid-6 {
         grid-template-columns: 1fr;
       }
       
@@ -429,6 +459,13 @@ class MagisterSchoolCard extends LitElement {
       widget_columns: null,
       ...config
     };
+    this._layout = this._normalizeLayout(this.config.layout);
+  }
+
+  _normalizeLayout(layout) {
+    if (!layout || layout === 'auto') return 'grid-auto';
+    const allowed = ['grid-1', 'grid-2', 'grid-3', 'grid-4', 'grid-5', 'grid-6', 'grid-auto'];
+    return allowed.includes(layout) ? layout : 'grid-auto';
   }
 
   connectedCallback() {

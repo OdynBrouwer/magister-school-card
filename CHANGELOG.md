@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.1
+
+- Fixed the `layout` option: `setConfig` now actually applies the configured
+  layout instead of always falling back to `grid-auto` (the in-card buttons
+  still work as before).
+- Added `grid-4`, `grid-5` and `grid-6` layouts, with responsive fallbacks
+  for narrower screens.
+- Unknown `layout` values now fall back to `grid-auto` instead of rendering an
+  unstyled container.
+
 ## 1.4.0
 
 - Stats widget now shows open and completed homework separately, using the new
