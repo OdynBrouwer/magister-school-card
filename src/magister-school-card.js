@@ -455,7 +455,7 @@ class MagisterSchoolCard extends LitElement {
   setConfig(config) {
     this.config = {
       layout: 'auto',
-      show_widgets: ['stats', 'schooltijden', 'volgende_schooldag', 'rooster_vandaag', 'cijfers', 'opdrachten'],
+      show_widgets: ['stats', 'schooltijden', 'volgende_schooldag', 'rooster_vandaag', 'cijfers', 'voortgangscijfers', 'opdrachten'],
       widget_columns: null,
       ...config
     };
@@ -587,6 +587,8 @@ class MagisterSchoolCard extends LitElement {
         <h2>${this._kindNaam}</h2>
         <div class="kind-meta">
           ${this._data.stamnummer ? html`<span>🎫 Stamnummer: ${this._data.stamnummer}</span>` : ''}
+          ${this._data.klas ? html`<span>🏫 Klas: ${this._data.klas}</span>` : ''}
+          ${this._data.profiel ? html`<span>🧭 Profiel: ${this._data.profiel}</span>` : ''}
           ${this._data.geboortedatum ? html`<span>🎂 Geboortedatum: ${this._data.geboortedatum}</span>` : ''}
           <span>🕒 Laatste update: ${this.hass.states[this.config.entity].state}</span>
         </div>
@@ -625,6 +627,7 @@ class MagisterSchoolCard extends LitElement {
       case 'rooster_meta': return this._renderRoosterMetaWidget();
       case 'rooster_morgen': return this._renderRoosterMorgenWidget();
       case 'cijfers': return this._renderCijfersWidget();
+      case 'voortgangscijfers': return this._renderVoortgangscijfersWidget();
       case 'opdrachten': return this._renderOpdrachtenWidget();
       case 'absenties': return this._renderAbsentiesWidget();
       case 'wijzigingen': return this._renderWijzigingenWidget();
@@ -635,7 +638,7 @@ class MagisterSchoolCard extends LitElement {
   }
 
   _renderWidgets() {
-    const showWidgets = this.config.show_widgets || ['stats', 'schooltijden', 'volgende_schooldag', 'rooster_vandaag', 'cijfers', 'opdrachten'];
+    const showWidgets = this.config.show_widgets || ['stats', 'schooltijden', 'volgende_schooldag', 'rooster_vandaag', 'cijfers', 'voortgangscijfers', 'opdrachten'];
     const widgets = [];
     
     if (showWidgets.includes('stats')) widgets.push(this._renderStatsWidget());
@@ -647,6 +650,7 @@ class MagisterSchoolCard extends LitElement {
     if (showWidgets.includes('rooster_meta')) widgets.push(this._renderRoosterMetaWidget());
     if (showWidgets.includes('rooster_morgen')) widgets.push(this._renderRoosterMorgenWidget());
     if (showWidgets.includes('cijfers')) widgets.push(this._renderCijfersWidget());
+    if (showWidgets.includes('voortgangscijfers')) widgets.push(this._renderVoortgangscijfersWidget());
     if (showWidgets.includes('opdrachten')) widgets.push(this._renderOpdrachtenWidget());
     if (showWidgets.includes('absenties')) widgets.push(this._renderAbsentiesWidget());
     if (showWidgets.includes('wijzigingen')) widgets.push(this._renderWijzigingenWidget());
@@ -663,8 +667,13 @@ class MagisterSchoolCard extends LitElement {
       <div class="afspraak-item ${isUitval ? 'uitval' : ''} ${isGewijzigd ? 'gewijzigd' : ''}">
         ${isUitval ? html`<div class="uitval-label">🚫 Vervallen</div>` : ''}
         ${isGewijzigd ? html`<div class="uitval-label">🔄 Gewijzigd</div>` : ''}
-        <div class="les-tijd"><strong>${this._formatTijd(afspraak.start)} - ${this._formatTijd(afspraak.einde)}</strong></div>
+        <div class="les-tijd">
+          <strong>${this._formatTijd(afspraak.start)} - ${this._formatTijd(afspraak.einde)}</strong>
+          ${afspraak.is_online ? html`<span class="badge badge-success">💻 Online</span>` : ''}
+          ${afspraak.duurt_hele_dag ? html`<span class="badge badge-warning">🕐 Hele dag</span>` : ''}
+        </div>
         <div class="les-omschrijving">${afspraak.omschrijving}</div>
+        ${afspraak.opmerking ? html`<div class="tijd">💬 ${afspraak.opmerking}</div>` : ''}
         ${afspraak.lokaal ? html`<div class="tijd">📍 ${afspraak.lokaal}</div>` : ''}
         ${afspraak.is_huiswerk ? html`<span class="badge">HW</span>` : ''}
       </div>
@@ -784,6 +793,40 @@ class MagisterSchoolCard extends LitElement {
     `;
   }
 
+  _renderVoortgangscijfersWidget() {
+    const cijfers = (this._data.voortgangscijfers || [])
+      .slice()
+      .sort((a, b) => (b.ingevoerd_op || '').localeCompare(a.ingevoerd_op || ''));
+
+    return html`
+      <div class="widget">
+        <div class="widget-header">
+          <h3 class="widget-title">📈 Voortgangscijfers</h3>
+          <span class="widget-icon">${cijfers.length}</span>
+        </div>
+        <div class="widget-content">
+          ${cijfers.length > 0 ? 
+            cijfers.slice(0, 10).map(cijfer => html`
+              <div class="cijfer-item" style="${cijfer.is_voldoende === false ? 'border-left-color: var(--error-color);' : ''}">
+                <div>
+                  <span class="vak">${cijfer.vak?.toUpperCase()}</span>: 
+                  <span class="waarde">${cijfer.waarde}</span>
+                  ${cijfer.weegfactor ? html` <span class="wf">(x${cijfer.weegfactor})</span>` : ''}
+                  ${cijfer.vrijstelling ? html`<span class="badge badge-warning">Vrijstelling</span>` : ''}
+                </div>
+                <div class="tijd">
+                  ${cijfer.omschrijving}${cijfer.periode ? ` · ${cijfer.periode}` : ''}
+                  ${cijfer.ingevoerd_op ? ` - ${cijfer.ingevoerd_op.substr(0, 10)}` : ''}
+                </div>
+              </div>
+            `) : 
+            html`<div class="empty-state">Nog geen cijfers dit schooljaar</div>`
+          }
+        </div>
+      </div>
+    `;
+  }
+
   _renderCijfersWidget() {
     const cijfers = this._data.cijfers || [];
 
@@ -850,7 +893,9 @@ class MagisterSchoolCard extends LitElement {
   }
 
   _renderAbsentiesWidget() {
-    const absenties = this._data.absenties || [];
+    const absenties = (this._data.absenties || [])
+      .slice()
+      .sort((a, b) => (b.start || '').localeCompare(a.start || ''));
 
     return html`
       <div class="widget">
@@ -860,10 +905,17 @@ class MagisterSchoolCard extends LitElement {
         </div>
         <div class="widget-content">
           ${absenties.length > 0 ? 
-            absenties.slice(-3).map(absentie => html`
-              <div class="afspraak-item">
-                <div><strong>${absentie.start?.substr(0, 10)}</strong></div>
+            absenties.slice(0, 5).map(absentie => html`
+              <div class="afspraak-item" style="${absentie.geoorloofd === false ? 'border-left-color: var(--error-color); background: rgba(244, 67, 54, 0.06);' : ''}">
+                <div>
+                  <strong>${absentie.start?.substr(0, 10)}</strong>
+                  ${absentie.lesuur ? html`<span class="tijd"> · ${absentie.lesuur}e uur</span>` : ''}
+                </div>
                 <div>${absentie.omschrijving}</div>
+                <div>
+                  ${absentie.code ? html`<span class="badge">${absentie.code.toUpperCase()}</span>` : ''}
+                  ${absentie.geoorloofd === false ? html`<span class="badge">Ongeoorloofd</span>` : html`<span class="badge badge-success">Geoorloofd</span>`}
+                </div>
                 ${absentie.afspraak ? html`<div class="tijd">${absentie.afspraak}</div>` : ''}
               </div>
             `) : 
@@ -923,6 +975,12 @@ class MagisterSchoolCard extends LitElement {
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span>🎓 Cijfers:</span>
               <strong style="color: var(--accent-color);">${this._data.cijfers?.length || 0}</strong>
+            </div>
+          </div>
+          <div class="afspraak-item">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>📈 Cijfers dit jaar:</span>
+              <strong style="color: var(--accent-color);">${this._data.voortgangscijfers?.length || 0}</strong>
             </div>
           </div>
           <div class="afspraak-item">
