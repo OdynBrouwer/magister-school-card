@@ -134,6 +134,8 @@ show_widgets:
 | `layout` | string | Grid layout: `grid-1`, `grid-2`, `grid-3`, `grid-auto` (alleen als `widget_columns` niet gebruikt wordt) | `grid-auto` |
 | `show_widgets` | lijst | Welke widgets tonen (alleen als `widget_columns` niet gebruikt wordt) | alle widgets |
 | `widget_columns` | object | **Nieuw!** Verdeel widgets over kolommen. Bijvoorbeeld: `{ column1: ['stats', 'rooster_meta'], column2: ['cijfers'] }` | `null` |
+| `hide_layout_selector` | boolean | Verberg de 1/2/3/auto kolom-kiezer | `false` |
+| `hide_kind_info` | boolean | Verberg de naamkaart (klas/profiel-balk) | `false` |
 
 ### 📋 Beschikbare widgets
 
@@ -141,9 +143,9 @@ show_widgets:
 - `rooster_vandaag` — **Altijd** rooster van vandaag
 - `rooster_morgen` — **Altijd** rooster van morgen  
 - `week_schooltijden` — Eerste begintijd en laatste eindtijd per weekdag
-- `rooster_meta` — **Slimme** widget die automatisch schakelt:
-  - Vóór 18:00 → toont vandaag
-  - Na 18:00 → toont morgen
+- `rooster_meta` — **Slimme** widget die de eerstvolgende dag mét lessen toont:
+  - Op een schooldag → vandaag
+  - In het weekend of vakantie → de eerstvolgende schooldag
   
   💡 **Tip:** Gebruik `rooster_vandaag` + `rooster_morgen` voor beide, of alleen `rooster_meta` voor automatisch schakelen.
 

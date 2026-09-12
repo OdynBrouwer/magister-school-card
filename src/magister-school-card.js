@@ -457,6 +457,8 @@ class MagisterSchoolCard extends LitElement {
       layout: 'auto',
       show_widgets: ['stats', 'schooltijden', 'volgende_schooldag', 'rooster_vandaag', 'huiswerk', 'cijfers', 'voortgangscijfers', 'opdrachten'],
       widget_columns: null,
+      hide_layout_selector: false,
+      hide_kind_info: false,
       ...config
     };
     this._layout = this._normalizeLayout(this.config.layout);
@@ -554,7 +556,7 @@ class MagisterSchoolCard extends LitElement {
       <div class="card">
         <div class="header">
           <h1>🏫 School Dashboard</h1>
-          ${!useColumnLayout ? html`
+          ${!useColumnLayout && !this.config.hide_layout_selector ? html`
             <div class="layout-selector">
               <button class="layout-btn ${this._layout === 'grid-1' ? 'active' : ''}" 
                       @click=${() => this._setLayout('grid-1')}>1 Kolom</button>
@@ -568,7 +570,7 @@ class MagisterSchoolCard extends LitElement {
           ` : ''}
         </div>
         
-        ${this._renderKindInfo()}
+        ${this.config.hide_kind_info ? '' : this._renderKindInfo()}
         
         ${useColumnLayout ? this._renderColumnLayout() : html`
           <div class="${this._layout}">
@@ -705,17 +707,37 @@ class MagisterSchoolCard extends LitElement {
     `;
   }
 
-  _renderRoosterMetaWidget() {
-    const hour = new Date().getHours();
-    const afspraken = this._data.afspraken || [];
-    
-    const isVandaag = hour < 18;
-    const dateStr = isVandaag ? this._getVandaag() : this._getMorgen();
-    const afsprakenFiltered = afspraken.filter(afspraak =>
-      this._getLocaleDateStr(afspraak.start) === dateStr
+  _nextSchoolDay(afspraken) {
+    const lessen = (afspraken || []).filter(a =>
+      a.soort === 'Les' &&
+      !a.is_uitval &&
+      a.start &&
+      a.start.substr(11, 8) !== '00:00:00'
     );
+    const vandaag = this._getVandaag();
+    const data = [...new Set(lessen.map(a => this._getLocaleDateStr(a.start)).filter(Boolean))].sort();
+    return data.find(d => d >= vandaag) || null;
+  }
 
-    const titel = isVandaag ? '📅 Rooster (Vandaag)' : '📅 Rooster (Morgen)';
+  _renderRoosterMetaWidget() {
+    const afspraken = this._data.afspraken || [];
+    const dateStr = this._nextSchoolDay(afspraken);
+    const afsprakenFiltered = dateStr
+      ? afspraken.filter(afspraak => this._getLocaleDateStr(afspraak.start) === dateStr)
+      : [];
+
+    const vandaag = this._getVandaag();
+    const morgen = this._getMorgen();
+    let titel;
+    if (!dateStr) {
+      titel = '📅 Rooster';
+    } else if (dateStr === vandaag) {
+      titel = '📅 Rooster (Vandaag)';
+    } else if (dateStr === morgen) {
+      titel = '📅 Rooster (Morgen)';
+    } else {
+      titel = `📅 Rooster (${dateStr})`;
+    }
 
     return html`
       <div class="widget">
@@ -726,7 +748,7 @@ class MagisterSchoolCard extends LitElement {
         <div class="widget-content">
           ${afsprakenFiltered.length > 0 ?
             afsprakenFiltered.map(afspraak => this._renderAfspraakItem(afspraak)) :
-            html`<div class="empty-state">Geen lessen ${isVandaag ? 'vandaag' : 'morgen'} 🎉</div>`
+            html`<div class="empty-state">Geen lessen gevonden 🎉</div>`
           }
         </div>
       </div>
