@@ -11,7 +11,7 @@ De card is ontworpen voor een snel schooloverzicht in Home Assistant. Kies zelf 
 
 ![Magister School Card voorbeeld](https://raw.githubusercontent.com/OdynBrouwer/magister-school-card/main/images/preview.png)
 
-**Huidige versie:** [v1.3.3](https://github.com/OdynBrouwer/magister-school-card/releases/tag/v1.3.3)
+**Huidige versie:** [v1.5.0](https://github.com/OdynBrouwer/magister-school-card/releases/tag/v1.5.0)
 
 ## Inhoud
 
@@ -150,9 +150,11 @@ show_widgets:
 #### 🎓 Overige widgets
 - `stats` — Statistieken overzicht
 - `volgende_les` — Eerstvolgende les
+- `huiswerk` — Open huiswerk (met afgerond-teller)
 - `cijfers` — Recente cijfers
+- `voortgangscijfers` — Cijfers van het huidige schooljaar
 - `opdrachten` — Huiswerk en opdrachten
-- `absenties` — Afwezigheid
+- `absenties` — Afwezigheid (met geoorloofd/code/lesuur)
 - `wijzigingen` — Roosterwijzigingen
 - `aanmeldingen` — Aanmeldingen
 - `activiteiten` — Schoolactiviteiten
