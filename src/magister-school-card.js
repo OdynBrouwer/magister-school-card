@@ -487,15 +487,12 @@ class MagisterSchoolCard extends LitElement {
 
   _extractKindInfo() {
     if (!this._data) return;
-    
-    const entityId = this.config.entity;
-    if (entityId.includes('tyas')) {
-      this._kindNaam = 'Tyas Brouwer';
-    } else if (entityId.includes('overview')) {
-      this._kindNaam = this._data.naam || 'Onbekend';
-    } else {
-      this._kindNaam = entityId.replace('sensor.magister_', '').replace(/_/g, ' ');
-    }
+
+    const entityId = this.config.entity || '';
+    this._kindNaam =
+      this._data.naam ||
+      this._data.kind_naam ||
+      entityId.replace('sensor.magister_', '').replace(/_/g, ' ');
   }
 
   /**
