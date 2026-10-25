@@ -1,3 +1,26 @@
+> ## ⚠️ This repository is deprecated
+>
+> As of **Magister School Integration v2.3.0** the card ships **inside the
+> integration**. It is served from `/magister_school/magister-school-card.js`
+> and registered as a dashboard resource automatically, so integration and card
+> versions can never drift apart.
+>
+> **Existing HACS users:** remove this plugin
+> (HACS → Frontend → Magister School Card → Remove), update the integration to
+> v2.3.0 or newer, restart Home Assistant and do a hard refresh (Ctrl+F5).
+> Your dashboards keep working — the card name `custom:magister-school-card`
+> is unchanged.
+>
+> **New users:** install
+> [Magister School Integration](https://github.com/OdynBrouwer/magister-school-integration)
+> only. Do not install this repository.
+>
+> This repository is archived and kept for history only. Issues and pull
+> requests are closed; please report problems in the
+> [integration issue tracker](https://github.com/OdynBrouwer/magister-school-integration/issues).
+
+---
+
 # Magister School Card
 
 ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2023.8+-blue?logo=home-assistant)
@@ -5,7 +28,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/OdynBrouwer/magister-school-card)](https://github.com/OdynBrouwer/magister-school-card/releases)
 ![License](https://img.shields.io/github/license/OdynBrouwer/magister-school-card)
 
-Een responsive Lovelace-card voor de **[Magister School Integration](https://github.com/OdynBrouwer/magister-school-integration)**. Toon rooster, schooltijden, cijfers, huiswerk, wijzigingen en meer in één overzichtelijke kaart.
+Een responsive Lovelace-card, sinds integratie **v2.3.0** meegeleverd in de **[Magister School Integration](https://github.com/OdynBrouwer/magister-school-integration)**. Toon rooster, schooltijden, cijfers, huiswerk, wijzigingen en meer in één overzichtelijke kaart.
 
 De card is ontworpen voor een snel schooloverzicht in Home Assistant. Kies zelf welke widgets zichtbaar zijn, gebruik een automatische gridindeling of verdeel de widgets over eigen kolommen.
 

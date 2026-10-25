@@ -1,3 +1,26 @@
+> ## ⚠️ This repository is deprecated
+>
+> As of **Magister School Integration v2.3.0** the card ships **inside the
+> integration**. It is served from `/magister_school/magister-school-card.js`
+> and registered as a dashboard resource automatically, so integration and card
+> versions can never drift apart.
+>
+> **Existing HACS users:** remove this plugin
+> (HACS → Frontend → Magister School Card → Remove), update the integration to
+> v2.3.0 or newer, restart Home Assistant and do a hard refresh (Ctrl+F5).
+> Your dashboards keep working — the card name `custom:magister-school-card`
+> is unchanged.
+>
+> **New users:** install
+> [Magister School Integration](https://github.com/OdynBrouwer/magister-school-integration)
+> only. Do not install this repository.
+>
+> This repository is archived and kept for history only. Issues and pull
+> requests are closed; please report problems in the
+> [integration issue tracker](https://github.com/OdynBrouwer/magister-school-integration/issues).
+
+---
+
 ## Magister School Card
 
 ### v1.3.0

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.6.0 — deprecated
+
+- The card now ships **inside the Magister School Integration** (v2.3.0+). This
+  repository is archived and no longer the canonical home of the card.
+- Guarded the `customElements.define` call, so a leftover install of this plugin
+  alongside the bundled copy no longer throws
+  `the name "magister-school-card" has already been used with this registry`.
+- Removed the hardcoded entity → name mapping; the card now uses the
+  `naam`/`kind_naam` attributes with a generic fallback.
+
 ## 1.4.1
 
 - Fixed the `layout` option: `setConfig` now actually applies the configured
