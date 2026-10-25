@@ -1199,4 +1199,8 @@ class MagisterSchoolCard extends LitElement {
   }
 }
 
-customElements.define('magister-school-card', MagisterSchoolCard);
+// The card may also be installed as a standalone HACS plugin. Guard the
+// registration so loading both copies does not throw.
+if (!customElements.get('magister-school-card')) {
+  customElements.define('magister-school-card', MagisterSchoolCard);
+}
